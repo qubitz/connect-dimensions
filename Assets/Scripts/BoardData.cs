@@ -4,7 +4,7 @@
  * 
  * Copy Right (c) 2018 All Rights Reserved
  * 
- * 4/6/2018
+ * 4/9/2018
  * 
  */
 
@@ -74,7 +74,7 @@ public class BoardData
     }
 
     //check is coordinate is in bounds of the board
-	public bool IsInBounds(Vector3Int coordinate)
+    public bool IsInBounds(Vector3Int coordinate)
     {
         return (board != null 
                 && coordinate.x >= 0 
@@ -132,9 +132,352 @@ public class BoardData
         return true;
     }
 
+    public string GetXYZBoard()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        string boardStr = "";
+
+        for (position.x = 0; position.x < Size.x; position.x++)
+        {
+            for (position.y = 0; position.y < Size.y; position.y++)
+            {
+                for (position.z = 0; position.z < Size.z; position.z++)
+                {
+                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                }
+
+                boardStr += '/';
+            }
+        }
+
+        return boardStr;
+    }
+
+    public string GetYXZBoard()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        string boardStr = "";
+
+        for (position.y = 0; position.y < Size.y; position.y++) 
+        {
+            for (position.x = 0; position.x < Size.x; position.x++)
+            {
+                for (position.z = 0; position.z < Size.z; position.z++)
+                {
+                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                }
+
+                boardStr += '/';
+            }
+        }
+
+        return boardStr;
+    }
+
+    public string GetYZXBoard()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        string boardStr = "";
+
+        for (position.y = 0; position.y < Size.y; position.y++)
+        {
+            for (position.z = 0; position.z < Size.z; position.z++)
+            {
+                for (position.x = 0; position.x < Size.x; position.x++) 
+                {
+                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                }
+
+                boardStr += '/';
+            }
+        }
+
+        return boardStr;
+    }
+
+    public string GetZXYBoard()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        string boardStr = "";
+
+        for (position.z = 0; position.z < Size.z; position.z++)
+        {
+            for (position.x = 0; position.x < Size.x; position.x++)
+            {
+                for (position.y = 0; position.y < Size.y; position.y++)
+                {
+                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                }
+
+                boardStr += '/';
+            }
+        }
+
+        return boardStr;
+    }
+
+    public string GetZYXBoard()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        string boardStr = "";
+
+        for (position.z = 0; position.z < Size.z; position.z++)
+        {
+            for (position.y = 0; position.y < Size.y; position.y++)
+            {
+                for (position.x = 0; position.x < Size.x; position.x++)
+                {
+                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                }
+
+                boardStr += '/';
+            }
+        }
+
+        return boardStr;
+    }
+
+    public string GetXZYBoard()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        string boardStr = "";
+
+        for (position.x = 0; position.x < Size.x; position.x++)
+        {
+            for (position.z = 0; position.z < Size.z; position.z++)
+            {
+                for (position.y = 0; position.y < Size.y; position.y++)
+                {
+                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                }
+
+                boardStr += '/';
+            }
+        }
+
+        return boardStr;
+    }
+
+    public string GetXDyDzBoard()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        int slice, w1, w2, index;
+
+        string boardStr = "";
+
+        for (position.x = 0; position.x < Size.x; position.x++)
+        {           
+            for (slice = 0; slice < Size.y + Size.z - 1; slice++)
+            {
+                w1 = slice < Size.z ? 0 : slice - Size.z + 1;
+                w2 = slice < Size.y ? 0 : slice - Size.y + 1;
+
+                for (index = slice - w2; index >= w1; index--)
+                {
+                    position.y = index;
+                    position.z = slice - index;
+
+                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                }
+
+                boardStr += '/';
+            }   
+        }
+
+        return boardStr;
+    }
+
+    public string GetXDyDzInverseBoard()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        int slice, w1, w2, index;
+
+        string boardStr = "";
+
+        for (position.x = 0; position.x < Size.x; position.x++)
+        {
+            for (slice = 0; slice < Size.y + Size.z - 1; slice++)
+            {
+                w1 = slice < Size.z ? 0 : slice - Size.z + 1;
+                w2 = slice < Size.y ? 0 : slice - Size.y + 1;
+
+                for (index = (Size.y - 1) - slice + w2; 
+                                            index <= (Size.y - 1) - w1; index++)
+                {
+                    position.y = index;
+                    position.z = index + (slice - Size.y + 1);
+
+                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                }
+
+                boardStr += '/';
+            }
+        }
+
+        return boardStr;
+    }
+
+    public string GetYDxDzBoard()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        int slice, w1, w2, index;
+
+        string boardStr = "";
+
+        for (position.y = 0; position.y < Size.y; position.y++)
+        {
+            for (slice = 0; slice < Size.x + Size.z - 1; slice++)
+            {
+                w1 = slice < Size.z ? 0 : slice - Size.z + 1;
+                w2 = slice < Size.x ? 0 : slice - Size.x + 1;
+
+                for (index = slice - w2; index >= w1; index--)
+                {
+                    position.x = index;
+                    position.z = slice - index;
+
+                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                }
+
+                boardStr += '/';
+            }
+        }
+
+        return boardStr;
+    }
+
+    public string GetYDxDzInverseBoard()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        int slice, w1, w2, index;
+
+        string boardStr = "";
+
+        for (position.y = 0; position.y < Size.y; position.y++)
+        {
+            for (slice = 0; slice < Size.x + Size.z - 1; slice++)
+            {
+                w1 = slice < Size.z ? 0 : slice - Size.z + 1;
+                w2 = slice < Size.x ? 0 : slice - Size.x + 1;
+
+                for (index = (Size.x - 1) - slice + w2;
+                                            index <= (Size.x - 1) - w1; index++)
+                {
+                    position.x = index;
+                    position.z = index + (slice - Size.x + 1);
+
+                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                }
+
+                boardStr += '/';
+            }
+        }
+
+        return boardStr;
+    }
+
+    public string GetZDxDyBoard()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        int slice, w1, w2, index;
+
+        string boardStr = "";
+
+        for (position.z = 0; position.z < Size.z; position.z++)
+        {
+            for (slice = 0; slice < Size.x + Size.y - 1; slice++)
+            {
+                w1 = slice < Size.y ? 0 : slice - Size.y + 1;
+                w2 = slice < Size.x ? 0 : slice - Size.x + 1;
+
+                for (index = slice - w2; index >= w1; index--)
+                {
+                    position.x = index;
+                    position.y = slice - index;
+
+                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                }
+
+                boardStr += '/';
+            }
+        }
+
+        return boardStr;
+    }
+
+    public string GetZDxDyInverseBoard()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        int slice, w1, w2, index;
+
+        string boardStr = "";
+
+        for (position.z = 0; position.z < Size.z; position.z++)
+        {
+            for (slice = 0; slice < Size.x + Size.y - 1; slice++)
+            {
+                w1 = slice < Size.y ? 0 : slice - Size.y + 1;
+                w2 = slice < Size.x ? 0 : slice - Size.x + 1;
+
+                for (index = (Size.x - 1) - slice + w2;
+                                            index <= (Size.x - 1) - w1; index++)
+                {
+                    position.x = index;
+                    position.y = index + (slice - Size.x + 1);
+
+                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                }
+
+                boardStr += '/';
+            }
+        }
+
+        return boardStr;
+    }
+
+    public string GetDxDyDzBoard()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        int slice, w1, w2, index;
+
+        string boardStr = "";
+
+        for (slice = 0; slice < Size.x + Size.y - 1; slice++)
+        {
+            w1 = slice < Size.y ? 0 : slice - Size.y + 1;
+            w2 = slice < Size.x ? 0 : slice - Size.x + 1;
+
+            for (index = (Size.x - 1) - slice + w2;
+                                        index <= (Size.x - 1) - w1; index++)
+            {
+                position.x = index;
+                position.y = index + (slice - Size.x + 1);
+
+                boardStr += board[position.x, position.y, position.z].ToString() + " ";
+            }
+
+            boardStr += '/';
+        }
+
+        return null;
+    }
 }
 
-// the defining pieces of the board
+// the pieces of the board
+[System.Serializable]
 public enum Token
 {    
     empty,
