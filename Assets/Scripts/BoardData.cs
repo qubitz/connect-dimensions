@@ -447,32 +447,120 @@ public class BoardData
         return boardStr;
     }
 
-    public string GetDxDyDzBoard()
+    public string GetDxDyInverseDzBoard()
     {
-        Vector3Int position = Vector3Int.zero;
-
-        int slice, w1, w2, index;
+        Vector3Int position = Vector3Int.zero, coordinate = Vector3Int.zero;
 
         string boardStr = "";
 
-        for (slice = 0; slice < Size.x + Size.y - 1; slice++)
+        for (coordinate.x = 0; coordinate.x < Size.x; coordinate.x++)
         {
-            w1 = slice < Size.y ? 0 : slice - Size.y + 1;
-            w2 = slice < Size.x ? 0 : slice - Size.x + 1;
-
-            for (index = (Size.x - 1) - slice + w2;
-                                        index <= (Size.x - 1) - w1; index++)
+            for (coordinate.y = 0; coordinate.y < Size.y; coordinate.y++)
             {
-                position.x = index;
-                position.y = index + (slice - Size.x + 1);
+                for (coordinate.z = 0; coordinate.z < Size.z; coordinate.z++)
+                {
+                    position = coordinate;
 
-                boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    while (IsInBounds(position))
+                    {
+                        boardStr += board[position.x, position.y, position.z].ToString() + " ";
+
+                        position += new Vector3Int(1, -1, 1);
+                    }
+
+                    boardStr += '/';
+                }
             }
-
-            boardStr += '/';
         }
 
-        return null;
+        return boardStr;
+    }
+
+    public string GetDxInverseDyDzBoard()
+    {
+        Vector3Int position = Vector3Int.zero, coordinate = Vector3Int.zero;
+
+        string boardStr = "";
+
+        for (coordinate.x = 0; coordinate.x < Size.x; coordinate.x++)
+        {
+            for (coordinate.y = 0; coordinate.y < Size.y; coordinate.y++)
+            {
+                for (coordinate.z = 0; coordinate.z < Size.z; coordinate.z++)
+                {
+                    position = coordinate;
+
+                    while (IsInBounds(position))
+                    {
+                        boardStr += board[position.x, position.y, position.z].ToString() + " ";
+
+                        position += new Vector3Int(-1, 1, 1);
+                    }
+
+                    boardStr += '/';
+                }
+            }
+        }
+
+        return boardStr;
+    }
+
+    public string GetDxDyDzBoard()
+    {
+        Vector3Int position = Vector3Int.zero, coordinate = Vector3Int.zero;
+
+        string boardStr = "";
+
+        for (coordinate.x = 0; coordinate.x < Size.x; coordinate.x++)
+        {
+            for (coordinate.y = 0; coordinate.y < Size.y; coordinate.y++)
+            {
+                for (coordinate.z = 0; coordinate.z < Size.z; coordinate.z++)
+                {
+                    position = coordinate;
+
+                    while (IsInBounds(position))
+                    {
+                        boardStr += board[position.x, position.y, position.z].ToString() + " ";
+
+                        position += new Vector3Int(1, 1, 1);
+                    }
+
+                    boardStr += '/';
+                }
+            }
+        }
+
+        return boardStr;
+    }
+
+    public string GetDxInverseDyInverseDzBoard()
+    {
+        Vector3Int position = Vector3Int.zero, coordinate = Vector3Int.zero;
+
+        string boardStr = "";
+
+        for (coordinate.x = 0; coordinate.x < Size.x; coordinate.x++)
+        {
+            for (coordinate.y = 0; coordinate.y < Size.y; coordinate.y++)
+            {
+                for (coordinate.z = 0; coordinate.z < Size.z; coordinate.z++)
+                {
+                    position = coordinate;
+
+                    while (IsInBounds(position))
+                    {
+                        boardStr += board[position.x, position.y, position.z].ToString() + " ";
+
+                        position += new Vector3Int(-1, -1, 1);
+                    }
+
+                    boardStr += '/';
+                }
+            }
+        }
+
+        return boardStr;
     }
 }
 
