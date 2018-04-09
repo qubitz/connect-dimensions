@@ -96,12 +96,12 @@ public class BoardData
         }
 
         //can the token be stacked here?
-        if (coordinate.z == 0)
+        if (coordinate.y == 0)
         {
             return true;
         }
 
-        return board[coordinate.x, coordinate.y, coordinate.z - 1] != Token.empty;
+        return board[coordinate.x, coordinate.y - 1, coordinate.z] != Token.empty;
     }
 
     //retrieves the token value at coordinate if coordinate is in bounds
@@ -559,6 +559,30 @@ public class BoardData
                 }
             }
         }
+
+        return boardStr;
+    }
+
+    public override string ToString()
+    {
+        Vector3Int position = Vector3Int.zero;
+
+        string boardStr = "Board:" + System.Environment.NewLine;
+
+        for (position.y = Size.y - 1; position.y >= 0; position.y--)
+        {
+            for (position.z = 0; position.z < Size.z; position.z++)
+            {
+                for (position.x = 0; position.x < Size.x; position.x++)
+                {
+                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                }
+
+                boardStr += System.Environment.NewLine;
+            }
+
+            boardStr += System.Environment.NewLine;
+        }        
 
         return boardStr;
     }

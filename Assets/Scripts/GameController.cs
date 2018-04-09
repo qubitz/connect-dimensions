@@ -35,9 +35,8 @@ public class GameController : MonoBehaviour
     private Token winner = Token.empty;
 
     private BoardData board;
-
-	// Use this for initialization
-	void Start ()
+    
+	void Awake ()
     {
         gameOver = false;
         currentPlayer = Token.yellow;
@@ -115,6 +114,11 @@ public class GameController : MonoBehaviour
         }
 
         return false;
+    }
+
+    public string Print()
+    {
+        return board.ToString();
     }
 
     private bool IsWinner(Token token, string test)
