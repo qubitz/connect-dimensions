@@ -4,7 +4,7 @@
  * 
  * Copy Right (c) 2018 All Rights Reserved
  * 
- * 4/6/2018
+ * 4/9/2018
  * 
  */
 
@@ -62,7 +62,7 @@ public class GameController : MonoBehaviour
                 ChangeTurn();
             }            
         }        
-    }    
+    }
 
     //check if the game has been won. Sets winner to the winning player if a winner exists
     public bool IsGameOver()
@@ -72,9 +72,23 @@ public class GameController : MonoBehaviour
 
         test = "";
 
-        // build test data //////////////////////////////////////////////////
-        
-        //to do implement
+        // build test data 
+        test = board.GetXYZBoard()
+            + board.GetXZYBoard()
+            + board.GetYXZBoard()
+            + board.GetYZXBoard()
+            + board.GetZXYBoard()
+            + board.GetZYXBoard()
+            + board.GetDxDyDzBoard()
+            + board.GetDxDyInverseDzBoard()
+            + board.GetDxInverseDyDzBoard()
+            + board.GetDxInverseDyInverseDzBoard()
+            + board.GetXDyDzBoard()
+            + board.GetXDyDzInverseBoard()
+            + board.GetYDxDzBoard()
+            + board.GetYDxDzInverseBoard()
+            + board.GetZDxDyBoard()
+            + board.GetZDxDyInverseBoard();
 
         //check for yellow win
         if (IsWinner(Token.yellow, test))
