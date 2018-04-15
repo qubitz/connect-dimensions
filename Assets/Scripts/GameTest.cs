@@ -1,5 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * 
+ * Author: Andrew Frost
+ * 
+ * Copy Right (c) 2018 All Rights Reserved
+ * 
+ * 4/15/2018
+ * 
+ */
+
 using UnityEngine;
 
 public class GameTest : MonoBehaviour

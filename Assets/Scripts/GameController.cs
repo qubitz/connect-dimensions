@@ -4,12 +4,10 @@
  * 
  * Copy Right (c) 2018 All Rights Reserved
  * 
- * 4/9/2018
+ * 4/15/2018
  * 
  */
-
-using System.Collections;
-using System.Collections.Generic;
+ 
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -66,31 +64,16 @@ public class GameController : MonoBehaviour
     //check if the game has been won. Sets winner to the winning player if a winner exists
     public bool IsGameOver()
     {
-        string test;
+        string boardState;
         Vector3Int position = Vector3Int.zero;
 
-        test = "";
+        boardState = "";
 
         // build test data 
-        test = board.GetXYZBoard()
-            + board.GetXZYBoard()
-            + board.GetYXZBoard()
-            + board.GetYZXBoard()
-            + board.GetZXYBoard()
-            + board.GetZYXBoard()
-            + board.GetDxDyDzBoard()
-            + board.GetDxDyInverseDzBoard()
-            + board.GetDxInverseDyDzBoard()
-            + board.GetDxInverseDyInverseDzBoard()
-            + board.GetXDyDzBoard()
-            + board.GetXDyDzInverseBoard()
-            + board.GetYDxDzBoard()
-            + board.GetYDxDzInverseBoard()
-            + board.GetZDxDyBoard()
-            + board.GetZDxDyInverseBoard();
+        boardState = GameStatus.GetBoardState(board);
 
         //check for yellow win
-        if (IsWinner(Token.yellow, test))
+        if (GameStatus.IsWinner(Token.yellow, boardState))
         {
             winner = Token.yellow;
 
@@ -98,7 +81,7 @@ public class GameController : MonoBehaviour
         }
 
         //check for red win
-        if (IsWinner(Token.red, test))
+        if (GameStatus.IsWinner(Token.red, boardState))
         {
             winner = Token.red;
 
@@ -106,7 +89,7 @@ public class GameController : MonoBehaviour
         }
 
         //check for draw
-        if (!test.Contains(Token.empty.ToString()))
+        if (!boardState.Contains(Token.empty.ToString()))
         {
             winner = Token.empty;
 
@@ -119,30 +102,7 @@ public class GameController : MonoBehaviour
     public string Print()
     {
         return board.ToString();
-    }
-
-    private bool IsWinner(Token token, string test)
-    {
-        if (test.Contains(GetKey(token)))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    private string GetKey(Token token)
-    {
-        int index;
-        string key = "";
-
-        for (index = 0; index < 4; index++)
-        {
-            key += token.ToString() + " ";
-        }
-
-        return key;
-    }
+    }    
 
     private void SetWinner()
     {
