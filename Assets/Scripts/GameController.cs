@@ -32,6 +32,14 @@ public class GameController : MonoBehaviour
 
     private Token winner = Token.empty;
 
+    public BoardData Board
+    {
+        get
+        {
+            return board;
+        }
+    }
+
     private BoardData board;
     
 	void Awake ()
