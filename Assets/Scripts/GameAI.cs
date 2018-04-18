@@ -48,21 +48,31 @@ public class GameAI : MonoBehaviour
         }
         
         boardState = GameStatus.GetBoardState(board);
-        
+
         //evaluate board state
 
-        //to do implement
+        //our value
+        value += 2 * GetTokenValue(boardState, myToken);
 
+        //opponent value
+        value -= GetTokenValue(boardState, (myToken == Token.red ? Token.yellow : Token.red));
+        
         return value;
     }
 
-    private static int GetConsecutiveTokenValue(string boardState, Token token)
+    private static int GetTokenValue(string boardState, Token token)
     {
         int index, value = 0, count;
         string testStr;
 
+        Token other;
+
         testStr = "";
 
+        //note: I'm aware that instances of "double counting" of combinations
+        //occurs in this heurisitic
+
+        //get weight of number of consecutive instances
         for (index = 0; index < 4; index++)
         {
             testStr += token.ToString() + " ";
@@ -72,6 +82,19 @@ public class GameAI : MonoBehaviour
 
             value += (index + 1) * count;
         }
+
+        //get weight of number of blocks
+        other = (token == Token.red ? Token.yellow : Token.red);
+
+        testStr = token.ToString() + " " + other.ToString() + " ";
+        count = Regex.Matches(boardState, testStr).Count;
+
+        value += 3 * count; //weight blocks heavier than most consecutive piece setups
+
+        testStr = other.ToString() + " " + token.ToString() + " ";
+        count = Regex.Matches(boardState, testStr).Count;
+
+        value += 3 * count; //weight blocks heavier than most consecutive piece setups
 
         return value;
     }
