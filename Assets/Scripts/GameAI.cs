@@ -4,14 +4,13 @@
  * 
  * Copy Right (c) 2018 All Rights Reserved
  * 
- * 4/16/2018
+ * 4/21/2018
  * 
  */
 
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 //the game's AI. 
 public class GameAI : MonoBehaviour
@@ -36,6 +35,92 @@ public class GameAI : MonoBehaviour
     {
 		
 	}
+
+    public static void FindMove(BoardData board, Token myToken, int depth)
+    {
+        //run AlphaBeta to find move
+    }
+
+    private static int AlphaBeta(BoardData leaf, Token current, int depth, int alpha, int beta, bool maximize, ref Vector3Int movePosition)
+    {
+        MoveData[] childLeaves;
+        Vector3Int placeHolder = Vector3Int.zero;
+        Token token = Token.empty;
+        int bestValue = 0, value, index;
+
+        //null test BoardData
+        if (leaf != null)
+        {
+            //check for depth being reached or if game is over
+            if (depth <= 0 || GameStatus.IsGameOver(leaf, ref token))
+            {
+                return EvaluateBoard(leaf, current);
+            }
+
+            //generate child leaves
+            childLeaves = GetAllChildrenOf(leaf, current);
+
+            //search each child leaf for most valuable outcome recursively
+            if (maximize)
+            {
+                bestValue = int.MinValue;
+
+                for (index = 0; index < childLeaves.Length; index++)
+                {
+                    value = AlphaBeta(childLeaves[index].board, 
+                                      GameStatus.GetOppositePlayerOf(current), 
+                                      depth - 1, alpha, beta, false, 
+                                      ref placeHolder);
+
+                    if (value > bestValue)
+                    {
+                        bestValue = value;
+
+                        //select move
+                        movePosition = childLeaves[index].move;
+                    }
+
+                    alpha = Mathf.Max(bestValue, alpha);
+
+                    if (beta <= alpha)
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                bestValue = int.MaxValue;
+
+                for (index = 0; index < childLeaves.Length; index++)
+                {
+                    value = AlphaBeta(childLeaves[index].board,
+                                      GameStatus.GetOppositePlayerOf(current),
+                                      depth - 1, alpha, beta, true, 
+                                      ref placeHolder);
+
+                    if (value < bestValue)
+                    {
+                        bestValue = value;
+                    }
+
+                    beta = Mathf.Min(bestValue, beta);
+
+                    if (beta <= alpha)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return bestValue;
+    }
+
+    private static MoveData[] GetAllChildrenOf(BoardData leaf, Token current)
+    {
+        return new List<MoveData>().ToArray(); //to do implement
+    }
 
     private static int EvaluateBoard(BoardData board, Token myToken)
     {
@@ -98,5 +183,11 @@ public class GameAI : MonoBehaviour
 
         return value;
     }
-    
+
+    private struct MoveData
+    {
+        public Vector3Int move;
+        public BoardData board;
+    }
+
 }

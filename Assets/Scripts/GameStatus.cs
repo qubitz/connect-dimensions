@@ -4,9 +4,10 @@
  * 
  * Copy Right (c) 2018 All Rights Reserved
  * 
- * 4/15/2018
+ * 4/20/2018
  * 
  */
+using UnityEngine;
 
 //helper class for helping to determine if a player has won and reading the game's board
 public static class GameStatus
@@ -30,6 +31,54 @@ public static class GameStatus
             + board.GetYDxDzInverseBoard()
             + board.GetZDxDyBoard()
             + board.GetZDxDyInverseBoard();
+    }
+
+    public static Token GetOppositePlayerOf(Token token)
+    {
+        if (token == Token.empty)
+        {
+            return Token.empty;
+        }
+
+        return (token == Token.yellow ? Token.red : Token.yellow);
+    }
+
+    //check if the game has been won. Sets winner to the winning player if a winner exists
+    public static bool IsGameOver(BoardData board, ref Token winner)
+    {
+        string boardState;
+        Vector3Int position = Vector3Int.zero;
+
+        boardState = "";
+
+        // build test data 
+        boardState = GameStatus.GetBoardState(board);
+
+        //check for yellow win
+        if (IsWinner(Token.yellow, boardState))
+        {
+            winner = Token.yellow;
+
+            return true;
+        }
+
+        //check for red win
+        if (IsWinner(Token.red, boardState))
+        {
+            winner = Token.red;
+
+            return true;
+        }
+
+        //check for draw
+        if (!boardState.Contains(Token.empty.ToString()))
+        {
+            winner = Token.empty;
+
+            return true;
+        }
+
+        return false;
     }
 
     //returns a bool based on if token has won the game given a board state 

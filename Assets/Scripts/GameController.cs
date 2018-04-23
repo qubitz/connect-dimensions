@@ -4,7 +4,7 @@
  * 
  * Copy Right (c) 2018 All Rights Reserved
  * 
- * 4/15/2018
+ * 4/20/2018
  * 
  */
  
@@ -56,7 +56,7 @@ public class GameController : MonoBehaviour
             && token == currentPlayer 
             && board.TrySetValue(coordinate, token))
         {
-            if (IsGameOver())
+            if (GameStatus.IsGameOver(board, ref winner))
             {
                 //set whichever player won as winner
                 SetWinner();
@@ -67,45 +67,7 @@ public class GameController : MonoBehaviour
                 ChangeTurn();
             }            
         }        
-    }
-
-    //check if the game has been won. Sets winner to the winning player if a winner exists
-    public bool IsGameOver()
-    {
-        string boardState;
-        Vector3Int position = Vector3Int.zero;
-
-        boardState = "";
-
-        // build test data 
-        boardState = GameStatus.GetBoardState(board);
-
-        //check for yellow win
-        if (GameStatus.IsWinner(Token.yellow, boardState))
-        {
-            winner = Token.yellow;
-
-            return true;
-        }
-
-        //check for red win
-        if (GameStatus.IsWinner(Token.red, boardState))
-        {
-            winner = Token.red;
-
-            return true;
-        }
-
-        //check for draw
-        if (!boardState.Contains(Token.empty.ToString()))
-        {
-            winner = Token.empty;
-
-            return true;
-        }
-
-        return false;
-    }
+    }    
 
     public string Print()
     {
@@ -128,7 +90,7 @@ public class GameController : MonoBehaviour
 
     private void ChangeTurn()
     {
-        currentPlayer = (currentPlayer == Token.yellow ? Token.red : Token.yellow);
+        currentPlayer = GameStatus.GetOppositePlayerOf(currentPlayer);
 
         InvokeTurnChange((currentPlayer == Token.yellow ? yellowPlayerTurn : redPlayerTurn), currentPlayer);
     }
