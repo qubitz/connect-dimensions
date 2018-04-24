@@ -2,7 +2,7 @@
  * 
  * Author: Andrew Frost
  * 
- * Copy Right (c) 2018 All Rights Reserved
+ * Copyright (c) 2018 All Rights Reserved
  * 
  * 4/9/2018
  * 

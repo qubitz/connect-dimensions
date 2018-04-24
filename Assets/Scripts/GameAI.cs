@@ -2,9 +2,9 @@
  * 
  * Author: Andrew Frost
  * 
- * Copy Right (c) 2018 All Rights Reserved
+ * Copyright (c) 2018 All Rights Reserved
  * 
- * 4/21/2018
+ * 4/24/2018
  * 
  */
 
@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using System.Threading;
 
 //the game's AI. 
 public class GameAI : MonoBehaviour
