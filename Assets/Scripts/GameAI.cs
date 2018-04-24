@@ -36,9 +36,15 @@ public class GameAI : MonoBehaviour
 		
 	}
 
-    public static void FindMove(BoardData board, Token myToken, int depth)
+    //returns the selected move on success and (-1, -1, -1) on failure
+    public static Vector3Int FindMove(BoardData board, Token myToken, int depth)
     {
+        Vector3Int move = new Vector3Int(-1, -1, -1);
+
         //run AlphaBeta to find move
+        AlphaBeta(board, myToken, depth, int.MinValue, int.MaxValue, true, ref move);
+
+        return move;
     }
 
     private static int AlphaBeta(BoardData leaf, Token current, int depth, int alpha, int beta, bool maximize, ref Vector3Int movePosition)
@@ -119,7 +125,40 @@ public class GameAI : MonoBehaviour
 
     private static MoveData[] GetAllChildrenOf(BoardData leaf, Token current)
     {
-        return new List<MoveData>().ToArray(); //to do implement
+        Vector3Int position = Vector3Int.zero;
+        List<MoveData> moves = new List<MoveData>();
+        MoveData move;
+
+        //iterate through the board bottom to top and build a list of all potential moves
+        for (position.x = 0; position.x < leaf.Size.x; position.x++)
+        {
+            for (position.z = 0; position.z < leaf.Size.z; position.z++)
+            {
+                for (position.y = 0; position.y < leaf.Size.y; position.y++)
+                {                    
+                    if (leaf.IsSpaceAvailable(position))
+                    {
+                        //create a new move
+                        move = new MoveData()
+                        {
+                            move = position,
+                            board = new BoardData(leaf)
+                        };
+
+                        //add the new token to the board
+                        move.board.TrySetValue(position, current);
+
+                        //add the move to moves
+                        moves.Add(move);
+
+                        //don't check above this position
+                        break;
+                    }
+                }
+            }            
+        }
+
+        return moves.ToArray(); //to do implement
     }
 
     private static int EvaluateBoard(BoardData board, Token myToken)
@@ -184,7 +223,7 @@ public class GameAI : MonoBehaviour
         return value;
     }
 
-    private struct MoveData
+    private class MoveData
     {
         public Vector3Int move;
         public BoardData board;
