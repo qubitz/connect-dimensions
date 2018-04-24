@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 870540960}
   - component: {fileID: 870540959}
   - component: {fileID: 870540961}
+  - component: {fileID: 870540962}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -176,8 +177,8 @@ MonoBehaviour:
   redPlayerTurn:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 870540961}
-        m_MethodName: SetRed
+      - m_Target: {fileID: 870540962}
+        m_MethodName: PlaceToken
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -201,7 +202,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &870540961
 MonoBehaviour:
@@ -215,6 +216,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0, z: 0}
+--- !u!114 &870540962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 870540958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: add387e3c6a8f71489a8bfbc5e7b686f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myToken: 1
+  depth: 3
 --- !u!1 &1554769295
 GameObject:
   m_ObjectHideFlags: 0

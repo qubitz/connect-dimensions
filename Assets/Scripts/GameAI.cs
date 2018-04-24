@@ -9,6 +9,7 @@
  */
 
 using System.Collections.Generic;
+using System.Collections;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -17,24 +18,35 @@ public class GameAI : MonoBehaviour
 {
     public Token myToken = Token.red;
 
+    [Range(1, 1000)]
+    public int depth = 3;
+
     private GameController gameController;
+
+    private BoardData board;
 
     private void Awake()
     {
         gameController = GetComponent<GameController>();
     }
 
-    // Use this for initialization
-    private void Start ()
+    public void PlaceToken()
     {
-		
-	}
-	
-	// Update is called once per frame
-	private void Update ()
+        StartCoroutine(PlayTurn());
+    }
+
+    private IEnumerator PlayTurn()
     {
-		
-	}
+        Vector3Int move;
+
+        board = new BoardData(gameController.Board);
+
+        move = FindMove(board, myToken, depth);
+
+        gameController.PlaceToken(move, myToken);
+
+        yield return null;
+    }
 
     //returns the selected move on success and (-1, -1, -1) on failure
     public static Vector3Int FindMove(BoardData board, Token myToken, int depth)
