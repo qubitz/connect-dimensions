@@ -4,10 +4,11 @@
  * 
  * Copyright (c) 2018 All Rights Reserved
  * 
- * 4/20/2018
+ * 4/24/2018
  * 
  */
 using UnityEngine;
+using System.Text;
 
 //helper class for helping to determine if a player has won and reading the game's board
 public static class GameStatus
@@ -15,22 +16,26 @@ public static class GameStatus
     //returns the board state
     public static string GetBoardState(BoardData board)
     {
-        return board.GetXYZBoard()
-            + board.GetXZYBoard()
-            + board.GetYXZBoard()
-            + board.GetYZXBoard()
-            + board.GetZXYBoard()
-            + board.GetZYXBoard()
-            + board.GetDxDyDzBoard()
-            + board.GetDxDyInverseDzBoard()
-            + board.GetDxInverseDyDzBoard()
-            + board.GetDxInverseDyInverseDzBoard()
-            + board.GetXDyDzBoard()
-            + board.GetXDyDzInverseBoard()
-            + board.GetYDxDzBoard()
-            + board.GetYDxDzInverseBoard()
-            + board.GetZDxDyBoard()
-            + board.GetZDxDyInverseBoard();
+        StringBuilder stringBuilder = new StringBuilder(board.GetXYZBoard());
+
+        stringBuilder.Append(board.GetXZYBoard());
+        stringBuilder.Append(board.GetYXZBoard());
+        stringBuilder.Append(board.GetYZXBoard());
+        stringBuilder.Append(board.GetZXYBoard());
+        stringBuilder.Append(board.GetZYXBoard());
+        stringBuilder.Append(board.GetDxDyDzBoard());
+        stringBuilder.Append(board.GetDxDyInverseDzBoard());
+        stringBuilder.Append(board.GetDxInverseDyDzBoard());
+        stringBuilder.Append(board.GetDxInverseDyInverseDzBoard());
+        stringBuilder.Append(board.GetXDyDzBoard());
+        stringBuilder.Append(board.GetXDyDzInverseBoard());
+        stringBuilder.Append(board.GetYDxDzBoard());
+        stringBuilder.Append(board.GetYDxDzInverseBoard());
+        stringBuilder.Append(board.GetZDxDyBoard());
+        stringBuilder.Append(board.GetZDxDyInverseBoard());
+
+
+        return stringBuilder.ToString();
     }
 
     public static Token GetOppositePlayerOf(Token token)
@@ -96,13 +101,13 @@ public static class GameStatus
     public static string GetWinKey(Token token)
     {
         int index;
-        string key = "";
+        StringBuilder key = new StringBuilder("");
 
         for (index = 0; index < 4; index++)
         {
-            key += token.ToString() + " ";
+            key.Append(token.ToString() + " ");
         }
 
-        return key;
+        return key.ToString();
     }
 }

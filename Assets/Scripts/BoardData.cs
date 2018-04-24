@@ -4,11 +4,12 @@
  * 
  * Copyright (c) 2018 All Rights Reserved
  * 
- * 4/9/2018
+ * 4/24/2018
  * 
  */
 
 using UnityEngine;
+using System.Text;
 
 //this class stores the gameboard's data
 public class BoardData
@@ -136,7 +137,7 @@ public class BoardData
     {
         Vector3Int position = Vector3Int.zero;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (position.x = 0; position.x < Size.x; position.x++)
         {
@@ -144,21 +145,21 @@ public class BoardData
             {
                 for (position.z = 0; position.z < Size.z; position.z++)
                 {
-                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
                 }
 
-                boardStr += '/';
+                boardStr.Append('/');
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetYXZBoard()
     {
         Vector3Int position = Vector3Int.zero;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (position.y = 0; position.y < Size.y; position.y++) 
         {
@@ -166,21 +167,21 @@ public class BoardData
             {
                 for (position.z = 0; position.z < Size.z; position.z++)
                 {
-                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
                 }
 
-                boardStr += '/';
+                boardStr.Append('/');
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetYZXBoard()
     {
         Vector3Int position = Vector3Int.zero;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (position.y = 0; position.y < Size.y; position.y++)
         {
@@ -188,21 +189,21 @@ public class BoardData
             {
                 for (position.x = 0; position.x < Size.x; position.x++) 
                 {
-                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
                 }
 
-                boardStr += '/';
+                boardStr.Append('/');
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetZXYBoard()
     {
         Vector3Int position = Vector3Int.zero;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (position.z = 0; position.z < Size.z; position.z++)
         {
@@ -210,21 +211,21 @@ public class BoardData
             {
                 for (position.y = 0; position.y < Size.y; position.y++)
                 {
-                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
                 }
 
-                boardStr += '/';
+                boardStr.Append('/');
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetZYXBoard()
     {
         Vector3Int position = Vector3Int.zero;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (position.z = 0; position.z < Size.z; position.z++)
         {
@@ -232,21 +233,21 @@ public class BoardData
             {
                 for (position.x = 0; position.x < Size.x; position.x++)
                 {
-                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
                 }
 
-                boardStr += '/';
+                boardStr.Append('/');
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetXZYBoard()
     {
         Vector3Int position = Vector3Int.zero;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (position.x = 0; position.x < Size.x; position.x++)
         {
@@ -254,14 +255,14 @@ public class BoardData
             {
                 for (position.y = 0; position.y < Size.y; position.y++)
                 {
-                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
                 }
 
-                boardStr += '/';
+                boardStr.Append('/');
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetXDyDzBoard()
@@ -270,7 +271,7 @@ public class BoardData
 
         int slice, w1, w2, index;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (position.x = 0; position.x < Size.x; position.x++)
         {           
@@ -284,14 +285,14 @@ public class BoardData
                     position.y = index;
                     position.z = slice - index;
 
-                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
                 }
 
-                boardStr += '/';
+                boardStr.Append('/');
             }   
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetXDyDzInverseBoard()
@@ -300,7 +301,7 @@ public class BoardData
 
         int slice, w1, w2, index;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (position.x = 0; position.x < Size.x; position.x++)
         {
@@ -315,14 +316,14 @@ public class BoardData
                     position.y = index;
                     position.z = index + (slice - Size.y + 1);
 
-                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
                 }
 
-                boardStr += '/';
+                boardStr.Append('/');
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetYDxDzBoard()
@@ -331,7 +332,7 @@ public class BoardData
 
         int slice, w1, w2, index;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (position.y = 0; position.y < Size.y; position.y++)
         {
@@ -345,14 +346,14 @@ public class BoardData
                     position.x = index;
                     position.z = slice - index;
 
-                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
                 }
 
-                boardStr += '/';
+                boardStr.Append('/');
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetYDxDzInverseBoard()
@@ -361,7 +362,7 @@ public class BoardData
 
         int slice, w1, w2, index;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (position.y = 0; position.y < Size.y; position.y++)
         {
@@ -376,14 +377,14 @@ public class BoardData
                     position.x = index;
                     position.z = index + (slice - Size.x + 1);
 
-                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
                 }
 
-                boardStr += '/';
+                boardStr.Append('/');
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetZDxDyBoard()
@@ -392,7 +393,7 @@ public class BoardData
 
         int slice, w1, w2, index;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (position.z = 0; position.z < Size.z; position.z++)
         {
@@ -406,14 +407,14 @@ public class BoardData
                     position.x = index;
                     position.y = slice - index;
 
-                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
                 }
 
-                boardStr += '/';
+                boardStr.Append('/');
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetZDxDyInverseBoard()
@@ -422,7 +423,7 @@ public class BoardData
 
         int slice, w1, w2, index;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (position.z = 0; position.z < Size.z; position.z++)
         {
@@ -437,21 +438,21 @@ public class BoardData
                     position.x = index;
                     position.y = index + (slice - Size.x + 1);
 
-                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
                 }
 
-                boardStr += '/';
+                boardStr.Append('/');
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetDxDyInverseDzBoard()
     {
         Vector3Int position = Vector3Int.zero, coordinate = Vector3Int.zero;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (coordinate.x = 0; coordinate.x < Size.x; coordinate.x++)
         {
@@ -463,24 +464,24 @@ public class BoardData
 
                     while (IsInBounds(position))
                     {
-                        boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                        boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
 
                         position += new Vector3Int(1, -1, 1);
                     }
 
-                    boardStr += '/';
+                    boardStr.Append('/');
                 }
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetDxInverseDyDzBoard()
     {
         Vector3Int position = Vector3Int.zero, coordinate = Vector3Int.zero;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (coordinate.x = 0; coordinate.x < Size.x; coordinate.x++)
         {
@@ -492,24 +493,24 @@ public class BoardData
 
                     while (IsInBounds(position))
                     {
-                        boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                        boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
 
                         position += new Vector3Int(-1, 1, 1);
                     }
 
-                    boardStr += '/';
+                    boardStr.Append('/');
                 }
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetDxDyDzBoard()
     {
         Vector3Int position = Vector3Int.zero, coordinate = Vector3Int.zero;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (coordinate.x = 0; coordinate.x < Size.x; coordinate.x++)
         {
@@ -521,24 +522,24 @@ public class BoardData
 
                     while (IsInBounds(position))
                     {
-                        boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                        boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
 
                         position += new Vector3Int(1, 1, 1);
                     }
 
-                    boardStr += '/';
+                    boardStr.Append('/');
                 }
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public string GetDxInverseDyInverseDzBoard()
     {
         Vector3Int position = Vector3Int.zero, coordinate = Vector3Int.zero;
 
-        string boardStr = "";
+        StringBuilder boardStr = new StringBuilder("");
 
         for (coordinate.x = 0; coordinate.x < Size.x; coordinate.x++)
         {
@@ -550,24 +551,24 @@ public class BoardData
 
                     while (IsInBounds(position))
                     {
-                        boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                        boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
 
                         position += new Vector3Int(-1, -1, 1);
                     }
 
-                    boardStr += '/';
+                    boardStr.Append('/');
                 }
             }
         }
 
-        return boardStr;
+        return boardStr.ToString();
     }
 
     public override string ToString()
     {
         Vector3Int position = Vector3Int.zero;
 
-        string boardStr = "Board:" + System.Environment.NewLine;
+        StringBuilder boardStr = new StringBuilder("Board:" + System.Environment.NewLine);
 
         for (position.y = Size.y - 1; position.y >= 0; position.y--)
         {
@@ -575,16 +576,16 @@ public class BoardData
             {
                 for (position.x = 0; position.x < Size.x; position.x++)
                 {
-                    boardStr += board[position.x, position.y, position.z].ToString() + " ";
+                    boardStr.Append(board[position.x, position.y, position.z].ToString() + " ");
                 }
 
-                boardStr += System.Environment.NewLine;
+                boardStr.Append(System.Environment.NewLine);
             }
 
-            boardStr += System.Environment.NewLine;
+            boardStr.Append(System.Environment.NewLine);
         }        
 
-        return boardStr;
+        return boardStr.ToString();
     }
 }
 
