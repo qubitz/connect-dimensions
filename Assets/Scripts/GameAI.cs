@@ -24,65 +24,124 @@ public class GameAI : MonoBehaviour
 
     private GameController gameController;
 
-    private bool planning = false;
-    private bool planFound = false;
-
     private List<Thread> threads;
+
+    private Dictionary<string, Vector3Int> predictedMoves;
 
     private void Awake()
     {
         gameController = GetComponent<GameController>();
 
-        planning = false;
-        planFound = false;
+        MoveJob.abortAll = false;
+
+        predictedMoves = new Dictionary<string, Vector3Int>();
 
         threads = new List<Thread>();
     }
 
     private void OnDestroy()
     {
+        StopAllCoroutines();
+        StopAllThreads();
+    }
+
+    private void StopAllThreads()
+    {
         int index;
-        
+
         //abort all threaded jobs
-        MoveJob.abort = true;        
-        
-        for(index = 0; index < threads.Count; index++)
+        MoveJob.abortAll = true;
+
+        for (index = 0; index < threads.Count; index++)
         {
             threads[index].Join();
         }
-        
-        StopAllCoroutines();
+
+        //clean up
+        threads.Clear();
+        MoveJob.abortAll = false;
     }
 
     public void PlaceToken()
     {
-        if (!planning && !planFound)
+        Vector3Int move;
+
+        lock (predictedMoves)
         {
-            //plan now
-            StartCoroutine(PlayTurnCoroutine());
-        }
-        else
-        {
-            //get the move from the predicted outcome
+            //if we have predicted this move then
+            if (predictedMoves.ContainsKey(gameController.Board.GetXYZBoard()))
+            {
+                //get the move from the predicted outcome
+                move = predictedMoves[gameController.Board.GetXYZBoard()];
+
+                //place token at position
+                gameController.PlaceToken(move, myToken);
+
+#if UNITY_EDITOR
+                Debug.Log("Placed token at " + move + " using predicted move.");
+#endif
+            }
+            else //if this move wasn't predicted then
+            {
+                //stop any coroutines from starting more predictions
+                StopAllCoroutines();
+
+                //stop any predictions that are running
+                StopAllThreads();
+
+                //plan the next move now
+                StartCoroutine(PlayTurnCoroutine(new BoardData(gameController.Board)));
+            }
         }
         
     }
 
-    private IEnumerator PlayTurnCoroutine()
+    public void PredictMoves()
     {
-        Thread thread;
+        StartCoroutine(PredictMovesCoroutine());
+    }
+
+    private IEnumerator PlayTurnCoroutine(BoardData board)
+    {
 
 #if UNITY_EDITOR
         float time = Time.timeSinceLevelLoad;
 #endif
-
         MoveJob moveJob = new MoveJob()
         {
             move = Vector3Int.zero,
-            board = new BoardData(gameController.Board),
+            board = board,
             myToken = myToken,
-            depth = depth
+            depth = depth,
+            jobID = 10101
         };
+
+        JobMonitor jobMonitor = new JobMonitor();
+
+        //start the job
+        StartCoroutine(GetMove(moveJob, jobMonitor));
+
+#if UNITY_EDITOR
+        Debug.Log("Working");
+#endif
+
+        //wait for it to complete
+        yield return new WaitUntil(() => jobMonitor.complete);
+
+        //place the token based on selected move
+        gameController.PlaceToken(moveJob.move, myToken);        
+
+#if UNITY_EDITOR
+        Debug.Log("Completed in " + (Time.timeSinceLevelLoad - time) + " seconds.");
+        Debug.Log("Placed token at " + moveJob.move + ".");
+#endif
+
+
+    }
+
+    private IEnumerator GetMove(MoveJob moveJob, JobMonitor jobMonitor, OnMoveJobComplete onMoveJobComplete = null)
+    {
+        Thread thread;        
 
         thread = GetMoveAsync(moveJob);
 
@@ -90,33 +149,94 @@ public class GameAI : MonoBehaviour
 
         thread.Start();
 
-#if UNITY_EDITOR
-        Debug.Log("Start Job!");
-#endif
         //ensure that the thread has started
         yield return new WaitUntil(() => thread.IsAlive);
 
-#if UNITY_EDITOR
-        Debug.Log("Working!");
-#endif
+        jobMonitor.started = true;
+
         //wait for the thread to finish
         yield return new WaitWhile(() => thread.IsAlive);
 
-#if UNITY_EDITOR
-        Debug.Log("Job complete with move: " + moveJob.move + ".");
-#endif
-        
-        //place the token based on selected move
-        gameController.PlaceToken(moveJob.move, myToken);
+        //mark the job as complete
+        if (onMoveJobComplete != null)
+        {
+            onMoveJobComplete.Invoke(moveJob);
+        }
+
+        jobMonitor.complete = true;
 
         //remove the thread from the list of threads
         threads.Remove(thread);
-
-#if UNITY_EDITOR
-        Debug.Log("Completed in " + (Time.timeSinceLevelLoad - time) + " seconds.");
-#endif
     }
 
+    private IEnumerator PredictMovesCoroutine()
+    {
+        BoardData board;
+        int coreCount, childIndex;
+
+        List<MoveJob> moveJobs;
+        JobMonitor jobMonitor;
+        
+        MoveData[] children;
+
+        predictedMoves.Clear();
+
+        board = new BoardData(gameController.Board);
+
+        coreCount = Mathf.Max(System.Environment.ProcessorCount - 1, 1);
+
+        //get all possible moves that the other player could make
+        children = GetAllChildrenOf(board, GameStatus.GetOppositePlayerOf(myToken), ref MoveJob.abortAll);
+
+        //run MoveJobs for all possible moves asynchronously
+        childIndex = 0;
+        moveJobs = new List<MoveJob>();
+
+        while (childIndex < children.Length)
+        {
+            yield return new WaitUntil(() => (MoveJob.abortAll || threads.Count < coreCount));
+
+            if (MoveJob.abortAll)
+            {
+                //terminate this operation if all jobs are being aborted
+                break;
+            }
+
+            jobMonitor = new JobMonitor();
+
+            //create the job
+            moveJobs.Add(new MoveJob()
+            {
+                move = Vector3Int.zero,
+                board = children[childIndex].board,
+                myToken = myToken,
+                depth = depth,
+                jobID = childIndex
+            });
+
+            //run the job
+            StartCoroutine(GetMove(moveJobs[moveJobs.Count - 1], jobMonitor, AddJobToPredictions));
+
+            //wait for the job to start
+            yield return new WaitUntil(() => jobMonitor.started);
+
+            //move to the next child
+            childIndex++;
+        }
+
+        //wait for all jobs to finish
+        yield return new WaitUntil(() => MoveJob.abortAll || threads.Count == 0);
+    }
+
+    private void AddJobToPredictions(MoveJob moveJob)
+    {
+        lock (predictedMoves)
+        {
+            predictedMoves[moveJob.board.GetXYZBoard()] = moveJob.move;
+        }
+    }
+
+    //gets a move using a separate thread
     private static Thread GetMoveAsync(MoveJob moveJob)
     {
         return new Thread(() => moveJob.GetMove());
@@ -321,11 +441,26 @@ public class GameAI : MonoBehaviour
         return value;
     }
 
+    private delegate void OnMoveJobComplete(MoveJob moveJob);
+
     private class MoveData
     {
         public Vector3Int move;
         public BoardData board;
     }
+
+    private class JobMonitor
+    {
+        public bool started;
+        public bool complete;
+
+        public JobMonitor()
+        {
+            started = false;
+            complete = false;
+        }
+    }
+
 
     private class MoveJob
     {
@@ -333,12 +468,13 @@ public class GameAI : MonoBehaviour
         public BoardData board;
         public Token myToken;
         public int depth;
+        public int jobID;
 
-        public static bool abort = false;
+        public static bool abortAll = false;
 
         public void GetMove()
         {
-            move = FindMove(board, myToken, depth, ref abort);
+            move = FindMove(board, myToken, depth, ref abortAll);
         }
     }
 

@@ -57,7 +57,7 @@ public static class GameStatus
         boardState = "";
 
         // build test data 
-        boardState = GameStatus.GetBoardState(board);
+        boardState = GetBoardState(board);
 
         //check for yellow win
         if (IsWinner(Token.yellow, boardState))
