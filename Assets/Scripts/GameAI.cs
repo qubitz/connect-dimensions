@@ -19,53 +19,132 @@ public class GameAI : MonoBehaviour
 {
     public Token myToken = Token.red;
 
-    [Range(1, 1000)]
+    [Range(1, 5)]
     public int depth = 3;
 
     private GameController gameController;
 
-    private BoardData board;
+    private bool planning = false;
+    private bool planFound = false;
+
+    private List<Thread> threads;
 
     private void Awake()
     {
         gameController = GetComponent<GameController>();
+
+        planning = false;
+        planFound = false;
+
+        threads = new List<Thread>();
+    }
+
+    private void OnDestroy()
+    {
+        int index;
+        
+        //abort all threaded jobs
+        MoveJob.abort = true;        
+        
+        for(index = 0; index < threads.Count; index++)
+        {
+            threads[index].Join();
+        }
+        
+        StopAllCoroutines();
     }
 
     public void PlaceToken()
     {
-        StartCoroutine(PlayTurn());
+        if (!planning && !planFound)
+        {
+            //plan now
+            StartCoroutine(PlayTurnCoroutine());
+        }
+        else
+        {
+            //get the move from the predicted outcome
+        }
+        
     }
 
-    private IEnumerator PlayTurn()
+    private IEnumerator PlayTurnCoroutine()
     {
-        Vector3Int move;
+        Thread thread;
 
-        board = new BoardData(gameController.Board);
+#if UNITY_EDITOR
+        float time = Time.timeSinceLevelLoad;
+#endif
 
-        move = FindMove(board, myToken, depth);
+        MoveJob moveJob = new MoveJob()
+        {
+            move = Vector3Int.zero,
+            board = new BoardData(gameController.Board),
+            myToken = myToken,
+            depth = depth
+        };
 
-        gameController.PlaceToken(move, myToken);
+        thread = GetMoveAsync(moveJob);
 
-        yield return null;
+        threads.Add(thread);
+
+        thread.Start();
+
+#if UNITY_EDITOR
+        Debug.Log("Start Job!");
+#endif
+        //ensure that the thread has started
+        yield return new WaitUntil(() => thread.IsAlive);
+
+#if UNITY_EDITOR
+        Debug.Log("Working!");
+#endif
+        //wait for the thread to finish
+        yield return new WaitWhile(() => thread.IsAlive);
+
+#if UNITY_EDITOR
+        Debug.Log("Job complete with move: " + moveJob.move + ".");
+#endif
+        
+        //place the token based on selected move
+        gameController.PlaceToken(moveJob.move, myToken);
+
+        //remove the thread from the list of threads
+        threads.Remove(thread);
+
+#if UNITY_EDITOR
+        Debug.Log("Completed in " + (Time.timeSinceLevelLoad - time) + " seconds.");
+#endif
+    }
+
+    private static Thread GetMoveAsync(MoveJob moveJob)
+    {
+        return new Thread(() => moveJob.GetMove());
     }
 
     //returns the selected move on success and (-1, -1, -1) on failure
-    public static Vector3Int FindMove(BoardData board, Token myToken, int depth)
+    private static Vector3Int FindMove(BoardData board, Token myToken, int depth, ref bool abort)
     {
         Vector3Int move = new Vector3Int(-1, -1, -1);
 
         //run AlphaBeta to find move
-        AlphaBeta(board, myToken, depth, int.MinValue, int.MaxValue, true, ref move);
+        AlphaBeta(board, myToken, depth, int.MinValue, int.MaxValue, true, ref move, ref abort);
 
         return move;
     }
 
-    private static int AlphaBeta(BoardData leaf, Token current, int depth, int alpha, int beta, bool maximize, ref Vector3Int movePosition)
+    private static int AlphaBeta(BoardData leaf, Token current, int depth, int alpha, int beta, bool maximize, ref Vector3Int movePosition, ref bool abort)
     {
         MoveData[] childLeaves;
         Vector3Int placeHolder = Vector3Int.zero;
         Token token = Token.empty;
         int bestValue = 0, value, index;
+
+        //if the thread executing this job has stopped then return
+        if (abort)
+        {
+            return -1;
+        }
 
         //null test BoardData
         if (leaf != null)
@@ -77,7 +156,7 @@ public class GameAI : MonoBehaviour
             }
 
             //generate child leaves
-            childLeaves = GetAllChildrenOf(leaf, current);
+            childLeaves = GetAllChildrenOf(leaf, current, ref abort);
 
             //search each child leaf for most valuable outcome recursively
             if (maximize)
@@ -89,7 +168,7 @@ public class GameAI : MonoBehaviour
                     value = AlphaBeta(childLeaves[index].board, 
                                       GameStatus.GetOppositePlayerOf(current), 
                                       depth - 1, alpha, beta, false, 
-                                      ref placeHolder);
+                                      ref placeHolder, ref abort);
 
                     if (value > bestValue)
                     {
@@ -116,7 +195,7 @@ public class GameAI : MonoBehaviour
                     value = AlphaBeta(childLeaves[index].board,
                                       GameStatus.GetOppositePlayerOf(current),
                                       depth - 1, alpha, beta, true, 
-                                      ref placeHolder);
+                                      ref placeHolder, ref abort);
 
                     if (value < bestValue)
                     {
@@ -136,11 +215,17 @@ public class GameAI : MonoBehaviour
         return bestValue;
     }
 
-    private static MoveData[] GetAllChildrenOf(BoardData leaf, Token current)
+    private static MoveData[] GetAllChildrenOf(BoardData leaf, Token current, ref bool abort)
     {
         Vector3Int position = Vector3Int.zero;
         List<MoveData> moves = new List<MoveData>();
         MoveData move;
+
+        //if the thread executing this job has stopped then return
+        if (abort)
+        {
+            return null;
+        }
 
         //iterate through the board bottom to top and build a list of all potential moves
         for (position.x = 0; position.x < leaf.Size.x; position.x++)
@@ -171,7 +256,7 @@ public class GameAI : MonoBehaviour
             }            
         }
 
-        return moves.ToArray(); //to do implement
+        return moves.ToArray();
     }
 
     private static int EvaluateBoard(BoardData board, Token myToken)
@@ -240,6 +325,21 @@ public class GameAI : MonoBehaviour
     {
         public Vector3Int move;
         public BoardData board;
+    }
+
+    private class MoveJob
+    {
+        public Vector3Int move;
+        public BoardData board;
+        public Token myToken;
+        public int depth;
+
+        public static bool abort = false;
+
+        public void GetMove()
+        {
+            move = FindMove(board, myToken, depth, ref abort);
+        }
     }
 
 }
