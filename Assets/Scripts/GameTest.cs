@@ -23,7 +23,7 @@ public class GameTest : MonoBehaviour
 	void Start ()
     {
         gameController = GetComponent<GameController>();
-        token = Token.yellow;
+        token = Token.Yellow;
 
         Debug.Log(gameController.Print());
 	}
@@ -41,12 +41,12 @@ public class GameTest : MonoBehaviour
 
     public void SetYellow()
     {
-        token = Token.yellow;
+        token = Token.Yellow;
     }
     
     public void SetRed()
     {
-        token = Token.red;
+        token = Token.Red;
     }
 
     public void PrintWinner(Token token)

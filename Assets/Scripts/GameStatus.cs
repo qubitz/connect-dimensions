@@ -40,12 +40,12 @@ public static class GameStatus
 
     public static Token GetOppositePlayerOf(Token token)
     {
-        if (token == Token.empty)
+        if (token == Token.Empty)
         {
-            return Token.empty;
+            return Token.Empty;
         }
 
-        return (token == Token.yellow ? Token.red : Token.yellow);
+        return (token == Token.Yellow ? Token.Red : Token.Yellow);
     }
 
     //check if the game has been won. Sets winner to the winning player if a winner exists
@@ -60,25 +60,25 @@ public static class GameStatus
         boardState = GetBoardState(board);
 
         //check for yellow win
-        if (IsWinner(Token.yellow, boardState))
+        if (IsWinner(Token.Yellow, boardState))
         {
-            winner = Token.yellow;
+            winner = Token.Yellow;
 
             return true;
         }
 
         //check for red win
-        if (IsWinner(Token.red, boardState))
+        if (IsWinner(Token.Red, boardState))
         {
-            winner = Token.red;
+            winner = Token.Red;
 
             return true;
         }
 
         //check for draw
-        if (!boardState.Contains(Token.empty.ToString()))
+        if (!boardState.Contains(Token.Empty.ToString()))
         {
-            winner = Token.empty;
+            winner = Token.Empty;
 
             return true;
         }

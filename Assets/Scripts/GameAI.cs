@@ -18,7 +18,7 @@ using UnityEngine.Events;
 //the game's AI. 
 public class GameAI : MonoBehaviour
 {
-    public Token myToken = Token.red;
+    public Token myToken = Token.Red;
 
     [Range(1, 5)]
     public int depth = 3;
@@ -282,7 +282,7 @@ public class GameAI : MonoBehaviour
     {
         MoveData[] childLeaves;
         Vector3Int placeHolder = Vector3Int.zero;
-        Token token = Token.empty;
+        Token token = Token.Empty;
         int bestValue = 0, value, index;
 
         //if the thread executing this job has stopped then return
@@ -422,7 +422,7 @@ public class GameAI : MonoBehaviour
         value += 2 * GetTokenValue(boardState, myToken);
 
         //opponent value
-        value -= GetTokenValue(boardState, (myToken == Token.red ? Token.yellow : Token.red));
+        value -= GetTokenValue(boardState, (myToken == Token.Red ? Token.Yellow : Token.Red));
         
         return value;
     }
@@ -451,7 +451,7 @@ public class GameAI : MonoBehaviour
         }
 
         //get weight of number of blocks
-        other = (token == Token.red ? Token.yellow : Token.red);
+        other = (token == Token.Red ? Token.Yellow : Token.Red);
 
         testStr = token.ToString() + " " + other.ToString() + " ";
         count = Regex.Matches(boardState, testStr).Count;

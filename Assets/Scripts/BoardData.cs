@@ -47,7 +47,7 @@ public class BoardData
             {
                 for (z = 0; z < board.GetLength(2); z++)
                 {
-                    board[x, y, z] = Token.empty;
+                    board[x, y, z] = Token.Empty;
                 }
             }
         }        
@@ -91,7 +91,7 @@ public class BoardData
     {
         //bounds and availability checking
         if (!IsInBounds(coordinate) 
-            || board[coordinate.x, coordinate.y, coordinate.z] != Token.empty)
+            || board[coordinate.x, coordinate.y, coordinate.z] != Token.Empty)
         {
             return false;
         }
@@ -102,13 +102,13 @@ public class BoardData
             return true;
         }
 
-        return board[coordinate.x, coordinate.y - 1, coordinate.z] != Token.empty;
+        return board[coordinate.x, coordinate.y - 1, coordinate.z] != Token.Empty;
     }
 
     //retrieves the token value at coordinate if coordinate is in bounds
     public bool TryGetValue(Vector3Int coordinate, out Token token)
     {
-        token = Token.empty;
+        token = Token.Empty;
 
         if (!IsInBounds(coordinate))
         {
@@ -593,7 +593,7 @@ public class BoardData
 [System.Serializable]
 public enum Token
 {    
-    empty,
-    red,
-    yellow
+    Empty,
+    Red,
+    Yellow
 }

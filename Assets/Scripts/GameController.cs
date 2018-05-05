@@ -28,9 +28,9 @@ public class GameController : MonoBehaviour
     private bool gameOver = false;
 
     [SerializeField]
-    private Token currentPlayer = Token.yellow;
+    private Token currentPlayer = Token.Yellow;
 
-    private Token winner = Token.empty;
+    private Token winner = Token.Empty;
 
     public BoardData Board
     {
@@ -45,7 +45,7 @@ public class GameController : MonoBehaviour
 	void Awake ()
     {
         gameOver = false;
-        currentPlayer = Token.yellow;
+        currentPlayer = Token.Yellow;
         board = new BoardData(boardSize);
         boardSize = board.Size;
 	}
@@ -92,7 +92,7 @@ public class GameController : MonoBehaviour
     {
         currentPlayer = GameStatus.GetOppositePlayerOf(currentPlayer);
 
-        InvokeTurnChange((currentPlayer == Token.yellow ? yellowPlayerTurn : redPlayerTurn), currentPlayer);
+        InvokeTurnChange((currentPlayer == Token.Yellow ? yellowPlayerTurn : redPlayerTurn), currentPlayer);
     }
 
     private static void InvokeTurnChange(UnityEvent callback, Token playerID)
