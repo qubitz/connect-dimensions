@@ -13,6 +13,7 @@ using System.Collections;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using System.Threading;
+using UnityEngine.Events;
 
 //the game's AI. 
 public class GameAI : MonoBehaviour
@@ -21,6 +22,10 @@ public class GameAI : MonoBehaviour
 
     [Range(1, 5)]
     public int depth = 3;
+
+    public UnityEvent onStartPlanning = null; //called when a new plan has to be determined on demand
+    public UnityEvent onStopPlanning = null; //called when a new plan determined on demand has completed
+    public UnityEvent onPlacePiece = null; //called when a piece is placed
 
     private GameController gameController;
 
@@ -75,6 +80,11 @@ public class GameAI : MonoBehaviour
                 move = predictedMoves[gameController.Board.GetXYZBoard()];
 
                 //place token at position
+                if (onPlacePiece != null)
+                {
+                    onPlacePiece.Invoke();
+                }
+
                 gameController.PlaceToken(move, myToken);
 
 #if UNITY_EDITOR
@@ -118,6 +128,11 @@ public class GameAI : MonoBehaviour
 
         JobMonitor jobMonitor = new JobMonitor();
 
+        if (onStartPlanning != null)
+        {
+            onStartPlanning.Invoke();
+        }
+
         //start the job
         StartCoroutine(GetMove(moveJob, jobMonitor));
 
@@ -128,7 +143,17 @@ public class GameAI : MonoBehaviour
         //wait for it to complete
         yield return new WaitUntil(() => jobMonitor.complete);
 
+        if (onStopPlanning != null)
+        {
+            onStopPlanning.Invoke();
+        }
+
         //place the token based on selected move
+        if (onPlacePiece != null)
+        {
+            onPlacePiece.Invoke();
+        }
+
         gameController.PlaceToken(moveJob.move, myToken);        
 
 #if UNITY_EDITOR
