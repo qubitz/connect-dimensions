@@ -117,12 +117,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4888974529341472}
   - component: {fileID: 114173327077763354}
-  - component: {fileID: 114982327307783538}
   - component: {fileID: 114407121032933096}
   - component: {fileID: 114049104179608240}
   - component: {fileID: 114024860180740356}
-  - component: {fileID: 114512537682804978}
-  - component: {fileID: 114525561754230294}
+  - component: {fileID: 114851951417412230}
   m_Layer: 0
   m_Name: Left Controller
   m_TagString: Untagged
@@ -155,12 +153,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4275568158403040}
   - component: {fileID: 114452318985581974}
-  - component: {fileID: 114899129463880526}
   - component: {fileID: 114855237287712430}
   - component: {fileID: 114683172926545674}
   - component: {fileID: 114090570175830146}
-  - component: {fileID: 114986011879802598}
-  - component: {fileID: 114324358893727588}
   m_Layer: 0
   m_Name: Right Controller
   m_TagString: Untagged
@@ -2213,21 +2208,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114324358893727588
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1275443101876408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ed2aa1a29b92ca4f84a26a5f6e9218b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  operation: 0
-  checkType: 4
-  identifiers:
-  - TransparentFX
 --- !u!114 &114324868535938252
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2463,52 +2443,6 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
---- !u!114 &114512537682804978
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1251292469064674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fc65878c7102524bb8c2bcfbefff497, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playareaCursor: {fileID: 0}
-  directionIndicator: {fileID: 0}
-  customRaycast: {fileID: 0}
-  pointerOriginSmoothingSettings:
-    smoothsPosition: 0
-    maxAllowedPerFrameDistanceDifference: 0.003
-    smoothsRotation: 0
-    maxAllowedPerFrameAngleDifference: 1.5
-  validCollisionColor: {r: 0.10488755, g: 0.71323526, b: 0.13425611, a: 1}
-  invalidCollisionColor: {r: 0.66176474, g: 0, b: 0, a: 1}
-  tracerVisibility: 0
-  cursorVisibility: 0
-  maximumLength: 100
-  scaleFactor: 0.002
-  cursorScaleMultiplier: 25
-  cursorMatchTargetRotation: 0
-  cursorDistanceRescale: 0
-  maximumCursorScale: {x: Infinity, y: Infinity, z: Infinity}
-  customTracer: {fileID: 0}
-  customCursor: {fileID: 0}
---- !u!114 &114525561754230294
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1251292469064674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ed2aa1a29b92ca4f84a26a5f6e9218b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  operation: 0
-  checkType: 4
-  identifiers:
-  - TransparentFX
 --- !u!114 &114530786425247700
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2751,6 +2685,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 666f106f8ad384d499459fa8df2e9301, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114851951417412230
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1251292469064674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58cdac96da703d7488a11cc3bde08cbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectToGrab: {fileID: 0}
+  objectIsPrefab: 0
+  cloneGrabbedObject: 0
+  alwaysCloneOnEnable: 0
+  attemptSecondaryGrab: 0
+  interactTouch: {fileID: 114407121032933096}
+  interactGrab: {fileID: 114024860180740356}
+  secondaryInteractTouch: {fileID: 114407121032933096}
+  secondaryInteractGrab: {fileID: 114024860180740356}
 --- !u!114 &114855237287712430
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2763,35 +2717,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   customColliderContainer: {fileID: 0}
---- !u!114 &114899129463880526
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1275443101876408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ec704cceb26f6f49b6c900fc83d8d18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enableTeleport: 1
-  targetListPolicy: {fileID: 114324358893727588}
-  pointerRenderer: {fileID: 114986011879802598}
-  activationButton: 9
-  holdButtonToActivate: 1
-  activateOnEnable: 0
-  activationDelay: 0
-  selectionButton: 10
-  selectOnPress: 0
-  selectionDelay: 0
-  selectAfterHoverDuration: 0
-  interactWithObjects: 1
-  grabToPointerTip: 1
-  attachedTo: {fileID: 1275443101876408}
-  controllerEvents: {fileID: 114452318985581974}
-  interactUse: {fileID: 114683172926545674}
-  customOrigin: {fileID: 0}
-  controller: {fileID: 0}
 --- !u!114 &114949786036118800
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2825,66 +2750,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Control Hints
---- !u!114 &114982327307783538
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1251292469064674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ec704cceb26f6f49b6c900fc83d8d18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enableTeleport: 1
-  targetListPolicy: {fileID: 114525561754230294}
-  pointerRenderer: {fileID: 114512537682804978}
-  activationButton: 9
-  holdButtonToActivate: 1
-  activateOnEnable: 0
-  activationDelay: 0
-  selectionButton: 10
-  selectOnPress: 0
-  selectionDelay: 0
-  selectAfterHoverDuration: 0
-  interactWithObjects: 1
-  grabToPointerTip: 1
-  attachedTo: {fileID: 1251292469064674}
-  controllerEvents: {fileID: 114173327077763354}
-  interactUse: {fileID: 114049104179608240}
-  customOrigin: {fileID: 0}
-  controller: {fileID: 0}
---- !u!114 &114986011879802598
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1275443101876408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fc65878c7102524bb8c2bcfbefff497, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playareaCursor: {fileID: 0}
-  directionIndicator: {fileID: 0}
-  customRaycast: {fileID: 0}
-  pointerOriginSmoothingSettings:
-    smoothsPosition: 0
-    maxAllowedPerFrameDistanceDifference: 0.003
-    smoothsRotation: 0
-    maxAllowedPerFrameAngleDifference: 1.5
-  validCollisionColor: {r: 0.10488755, g: 0.71323526, b: 0.13425611, a: 1}
-  invalidCollisionColor: {r: 0.66176474, g: 0, b: 0, a: 1}
-  tracerVisibility: 0
-  cursorVisibility: 0
-  maximumLength: 100
-  scaleFactor: 0.002
-  cursorScaleMultiplier: 25
-  cursorMatchTargetRotation: 0
-  cursorDistanceRescale: 0
-  maximumCursorScale: {x: Infinity, y: Infinity, z: Infinity}
-  customTracer: {fileID: 0}
-  customCursor: {fileID: 0}
 --- !u!124 &124561389705425100
 Behaviour:
   m_ObjectHideFlags: 1
