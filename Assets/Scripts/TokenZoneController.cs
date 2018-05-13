@@ -58,11 +58,17 @@ public class TokenZoneController : MonoBehaviour
         InitZoneData();
     }
 
-    public void OnTokenPlaced(Vector3Int index)
+    public void OnTokenPlaced(Vector3Int index, bool aiPlaced = false)
     {
         Debug.Log("Token placed at: " + index);
         TokenAt(index + Vector3Int.up)?.SetActive(true);
-        gameController.PlaceToken(index, TokenType.Player);
+        if (!aiPlaced) gameController.PlaceToken(index, TokenType.Player);
+    }
+
+    public void PlaceToken(GameObject tokenToPlace, Vector3Int index)
+    {
+        // TODO: Position `tokenToPlace` near board before `ForceSnap` 
+        TokenAt(index).GetComponent<TokenSnapDropZone>().PlaceToken(tokenToPlace);
     }
 
     protected void Awake()

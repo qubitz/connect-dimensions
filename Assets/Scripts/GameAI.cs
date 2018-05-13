@@ -22,6 +22,8 @@ public class GameAI : MonoBehaviour
 
     [Range(1, 5)]
     public int depth = 3;
+    [SerializeField]
+    private GameObject TokenPrefabToPlace;
 
     public UnityEvent onStartPlanning = null; //called when a new plan has to be determined on demand
     public UnityEvent onStopPlanning = null; //called when a new plan determined on demand has completed
@@ -164,7 +166,8 @@ public class GameAI : MonoBehaviour
 
         gameController.PlaceToken(move, myToken);
 
-        //place logic for placing peice on board either here or add as event onPlacePiece
+        var token = Instantiate(TokenPrefabToPlace);
+        TokenZoneController.instance.PlaceToken(token, move);
     }
 
     private IEnumerator GetMove(MoveJob moveJob, JobMonitor jobMonitor, OnMoveJobComplete onMoveJobComplete = null)

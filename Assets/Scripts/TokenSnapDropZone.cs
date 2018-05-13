@@ -5,14 +5,18 @@ public class TokenSnapDropZone : VRTK_SnapDropZone
 {
     public Vector3Int index = Vector3Int.zero;
 
-    public override void OnObjectSnappedToDropZone(SnapDropZoneEventArgs e)
+    private bool snapForced = false;
+
+    public void PlaceToken(GameObject tokenToPlace)
     {
-        TokenZoneController.instance.OnTokenPlaced(index);
-        base.OnObjectSnappedToDropZone(e);
+        snapForced = true;
+        ForceSnap(tokenToPlace);
     }
 
-    public override void OnObjectUnsnappedFromDropZone(SnapDropZoneEventArgs e)
+    public override void OnObjectSnappedToDropZone(SnapDropZoneEventArgs e)
     {
-        if (!isSnapped) base.OnObjectUnsnappedFromDropZone(e);
+        currentSnappedObject.isGrabbable = false;
+        TokenZoneController.instance.OnTokenPlaced(index, snapForced);
+        base.OnObjectSnappedToDropZone(e);
     }
 }
