@@ -18,7 +18,7 @@ using UnityEngine.Events;
 //the game's AI. 
 public class GameAI : MonoBehaviour
 {
-    public Token myToken = Token.Red;
+    public TokenType myToken = TokenType.Player;
 
     [Range(1, 5)]
     public int depth = 3;
@@ -67,7 +67,7 @@ public class GameAI : MonoBehaviour
         MoveJob.abortAll = false;
     }
 
-    public void PlaceToken()
+    public void StartPlaceToken()
     {
         Vector3Int move;
 
@@ -80,12 +80,7 @@ public class GameAI : MonoBehaviour
                 move = predictedMoves[gameController.Board.GetXYZBoard()];
 
                 //place token at position
-                if (onPlacePiece != null)
-                {
-                    onPlacePiece.Invoke();
-                }
-
-                gameController.PlaceToken(move, myToken);
+                PlaceToken(move);
 
 #if UNITY_EDITOR
                 Debug.Log("Placed token at " + move + " using predicted move.");
@@ -149,12 +144,7 @@ public class GameAI : MonoBehaviour
         }
 
         //place the token based on selected move
-        if (onPlacePiece != null)
-        {
-            onPlacePiece.Invoke();
-        }
-
-        gameController.PlaceToken(moveJob.move, myToken);        
+        PlaceToken(moveJob.move);      
 
 #if UNITY_EDITOR
         Debug.Log("Completed in " + (Time.timeSinceLevelLoad - time) + " seconds.");
@@ -162,6 +152,19 @@ public class GameAI : MonoBehaviour
 #endif
 
 
+    }
+
+    private void PlaceToken(Vector3Int move)
+    {
+        //place the token based on selected move
+        if (onPlacePiece != null)
+        {
+            onPlacePiece.Invoke();
+        }
+
+        gameController.PlaceToken(move, myToken);
+
+        //place logic for placing peice on board either here or add as event onPlacePiece
     }
 
     private IEnumerator GetMove(MoveJob moveJob, JobMonitor jobMonitor, OnMoveJobComplete onMoveJobComplete = null)
@@ -268,7 +271,7 @@ public class GameAI : MonoBehaviour
     }
 
     //returns the selected move on success and (-1, -1, -1) on failure
-    private static Vector3Int FindMove(BoardData board, Token myToken, int depth, ref bool abort)
+    private static Vector3Int FindMove(BoardData board, TokenType myToken, int depth, ref bool abort)
     {
         Vector3Int move = new Vector3Int(-1, -1, -1);
 
@@ -278,11 +281,11 @@ public class GameAI : MonoBehaviour
         return move;
     }
 
-    private static int AlphaBeta(BoardData leaf, Token current, int depth, int alpha, int beta, bool maximize, ref Vector3Int movePosition, ref bool abort)
+    private static int AlphaBeta(BoardData leaf, TokenType current, int depth, int alpha, int beta, bool maximize, ref Vector3Int movePosition, ref bool abort)
     {
         MoveData[] childLeaves;
         Vector3Int placeHolder = Vector3Int.zero;
-        Token token = Token.Empty;
+        TokenType token = TokenType.Empty;
         int bestValue = 0, value, index;
 
         //if the thread executing this job has stopped then return
@@ -360,7 +363,7 @@ public class GameAI : MonoBehaviour
         return bestValue;
     }
 
-    private static MoveData[] GetAllChildrenOf(BoardData leaf, Token current, ref bool abort)
+    private static MoveData[] GetAllChildrenOf(BoardData leaf, TokenType current, ref bool abort)
     {
         Vector3Int position = Vector3Int.zero;
         List<MoveData> moves = new List<MoveData>();
@@ -404,7 +407,7 @@ public class GameAI : MonoBehaviour
         return moves.ToArray();
     }
 
-    private static int EvaluateBoard(BoardData board, Token myToken)
+    private static int EvaluateBoard(BoardData board, TokenType myToken)
     {
         int value = 0;
         string boardState;
@@ -422,17 +425,17 @@ public class GameAI : MonoBehaviour
         value += 2 * GetTokenValue(boardState, myToken);
 
         //opponent value
-        value -= GetTokenValue(boardState, (myToken == Token.Red ? Token.Yellow : Token.Red));
+        value -= GetTokenValue(boardState, (myToken == TokenType.Player ? TokenType.AI : TokenType.Player));
         
         return value;
     }
 
-    private static int GetTokenValue(string boardState, Token token)
+    private static int GetTokenValue(string boardState, TokenType token)
     {
         int index, value = 0, count;
         string testStr;
 
-        Token other;
+        TokenType other;
 
         testStr = "";
 
@@ -451,7 +454,7 @@ public class GameAI : MonoBehaviour
         }
 
         //get weight of number of blocks
-        other = (token == Token.Red ? Token.Yellow : Token.Red);
+        other = (token == TokenType.Player ? TokenType.AI : TokenType.Player);
 
         testStr = token.ToString() + " " + other.ToString() + " ";
         count = Regex.Matches(boardState, testStr).Count;
@@ -491,7 +494,7 @@ public class GameAI : MonoBehaviour
     {
         public Vector3Int move;
         public BoardData board;
-        public Token myToken;
+        public TokenType myToken;
         public int depth;
         public int jobID;
 

@@ -20,17 +20,17 @@ public class GameController : MonoBehaviour
     private PlayerEvent winEvent = null;
 
     [SerializeField]
-    private UnityEvent yellowPlayerTurn = null;
+    private UnityEvent playerTurn = null;
 
     [SerializeField]
-    private UnityEvent redPlayerTurn = null;    
+    private UnityEvent aiTurn = null;    
 
     private bool gameOver = false;
 
     [SerializeField]
-    private Token currentPlayer = Token.Yellow;
+    private TokenType currentPlayer = TokenType.AI;
 
-    private Token winner = Token.Empty;
+    private TokenType winner = TokenType.Empty;
 
     public BoardData Board
     {
@@ -45,13 +45,15 @@ public class GameController : MonoBehaviour
 	void Awake ()
     {
         gameOver = false;
-        currentPlayer = Token.Yellow;
         board = new BoardData(boardSize);
         boardSize = board.Size;
 	}
 
-    public void PlaceToken(Vector3Int coordinate, Token token)
+    public void PlaceToken(Vector3Int coordinate, TokenType token)
     {
+        Debug.Log("Piece placed " + token + " at " + coordinate +" and current player is " + currentPlayer);
+
+
         if (!gameOver 
             && token == currentPlayer 
             && board.TrySetValue(coordinate, token))
@@ -64,6 +66,7 @@ public class GameController : MonoBehaviour
             else
             {
                 //switch player
+                Debug.Log("Changing turn.");
                 ChangeTurn();
             }            
         }        
@@ -92,13 +95,15 @@ public class GameController : MonoBehaviour
     {
         currentPlayer = GameStatus.GetOppositePlayerOf(currentPlayer);
 
-        InvokeTurnChange((currentPlayer == Token.Yellow ? yellowPlayerTurn : redPlayerTurn), currentPlayer);
+        InvokeTurnChange((currentPlayer == TokenType.Player ? playerTurn : aiTurn), currentPlayer);
     }
 
-    private static void InvokeTurnChange(UnityEvent callback, Token playerID)
+    private static void InvokeTurnChange(UnityEvent callback, TokenType playerID)
     {
         if (callback != null)
         {
+            Debug.Log("Invoking " + playerID + "'s callback.");
+
             callback.Invoke();
         }
         else
@@ -109,7 +114,7 @@ public class GameController : MonoBehaviour
 }
 
 [System.Serializable]
-public class PlayerEvent : UnityEvent<Token> { }
+public class PlayerEvent : UnityEvent<TokenType> { }
 
 [System.Serializable]
-public class TokenEvent : UnityEvent<Vector3Int, Token> { }
+public class TokenEvent : UnityEvent<Vector3Int, TokenType> { }

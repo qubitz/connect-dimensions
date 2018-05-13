@@ -38,18 +38,18 @@ public static class GameStatus
         return stringBuilder.ToString();
     }
 
-    public static Token GetOppositePlayerOf(Token token)
+    public static TokenType GetOppositePlayerOf(TokenType token)
     {
-        if (token == Token.Empty)
+        if (token == TokenType.Empty)
         {
-            return Token.Empty;
+            return TokenType.Empty;
         }
 
-        return (token == Token.Yellow ? Token.Red : Token.Yellow);
+        return (token == TokenType.AI ? TokenType.Player : TokenType.AI);
     }
 
     //check if the game has been won. Sets winner to the winning player if a winner exists
-    public static bool IsGameOver(BoardData board, ref Token winner)
+    public static bool IsGameOver(BoardData board, ref TokenType winner)
     {
         string boardState;
         Vector3Int position = Vector3Int.zero;
@@ -60,25 +60,25 @@ public static class GameStatus
         boardState = GetBoardState(board);
 
         //check for yellow win
-        if (IsWinner(Token.Yellow, boardState))
+        if (IsWinner(TokenType.AI, boardState))
         {
-            winner = Token.Yellow;
+            winner = TokenType.AI;
 
             return true;
         }
 
         //check for red win
-        if (IsWinner(Token.Red, boardState))
+        if (IsWinner(TokenType.Player, boardState))
         {
-            winner = Token.Red;
+            winner = TokenType.Player;
 
             return true;
         }
 
         //check for draw
-        if (!boardState.Contains(Token.Empty.ToString()))
+        if (!boardState.Contains(TokenType.Empty.ToString()))
         {
-            winner = Token.Empty;
+            winner = TokenType.Empty;
 
             return true;
         }
@@ -87,7 +87,7 @@ public static class GameStatus
     }
 
     //returns a bool based on if token has won the game given a board state 
-    public static bool IsWinner(Token token, string boardState)
+    public static bool IsWinner(TokenType token, string boardState)
     {
         if (boardState.Contains(GetWinKey(token)))
         {
@@ -98,7 +98,7 @@ public static class GameStatus
     }
 
     //returns a winning string for a given token
-    public static string GetWinKey(Token token)
+    public static string GetWinKey(TokenType token)
     {
         int index;
         StringBuilder key = new StringBuilder("");

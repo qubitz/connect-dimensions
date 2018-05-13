@@ -17,13 +17,13 @@ public class GameTest : MonoBehaviour
 
     private GameController gameController;
 
-    private Token token;
+    private TokenType token;
 
 	// Use this for initialization
 	void Start ()
     {
         gameController = GetComponent<GameController>();
-        token = Token.Yellow;
+        token = TokenType.AI;
 
         Debug.Log(gameController.Print());
 	}
@@ -41,15 +41,15 @@ public class GameTest : MonoBehaviour
 
     public void SetYellow()
     {
-        token = Token.Yellow;
+        token = TokenType.AI;
     }
     
     public void SetRed()
     {
-        token = Token.Red;
+        token = TokenType.Player;
     }
 
-    public void PrintWinner(Token token)
+    public void PrintWinner(TokenType token)
     {
         Debug.Log(token.ToString() + " won!");
     }

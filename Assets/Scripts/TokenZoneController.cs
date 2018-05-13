@@ -5,6 +5,7 @@ using VRTK;
 public class TokenZoneController : MonoBehaviour
 {
     public static TokenZoneController instance = null;
+    public GameController gameController = null;
 
     [Header("Placement Settings")]
     [SerializeField]
@@ -61,7 +62,7 @@ public class TokenZoneController : MonoBehaviour
     {
         Debug.Log("Token placed at: " + index);
         TokenAt(index + Vector3Int.up)?.SetActive(true);
-        FindObjectOfType<GameController>().PlaceToken(index, Token.Red);
+        gameController.PlaceToken(index, TokenType.Player);
     }
 
     protected void Awake()
@@ -73,6 +74,11 @@ public class TokenZoneController : MonoBehaviour
         else if (instance != this)
         {
             Destroy(gameObject);
+        }
+
+        if (!gameController)
+        {
+            gameController = FindObjectOfType<GameController>();
         }
     }
 

@@ -15,7 +15,7 @@ using System.Text;
 public class BoardData
 {
     //the game's board
-    private Token[,,] board = null;
+    private TokenType[,,] board = null;
 
     private Vector3Int size = Vector3Int.zero;
 
@@ -39,7 +39,7 @@ public class BoardData
 
         this.size = size;
 
-        board = new Token[size.x, size.y, size.z];
+        board = new TokenType[size.x, size.y, size.z];
 
         for (x = 0; x < board.GetLength(0); x++)
         {
@@ -47,7 +47,7 @@ public class BoardData
             {
                 for (z = 0; z < board.GetLength(2); z++)
                 {
-                    board[x, y, z] = Token.Empty;
+                    board[x, y, z] = TokenType.Empty;
                 }
             }
         }        
@@ -60,7 +60,7 @@ public class BoardData
 
         size = other.size;
 
-        board = new Token[size.x, size.y, size.y];
+        board = new TokenType[size.x, size.y, size.y];
 
         for (x = 0; x < board.GetLength(0); x++)
         {
@@ -91,7 +91,7 @@ public class BoardData
     {
         //bounds and availability checking
         if (!IsInBounds(coordinate) 
-            || board[coordinate.x, coordinate.y, coordinate.z] != Token.Empty)
+            || board[coordinate.x, coordinate.y, coordinate.z] != TokenType.Empty)
         {
             return false;
         }
@@ -102,13 +102,13 @@ public class BoardData
             return true;
         }
 
-        return board[coordinate.x, coordinate.y - 1, coordinate.z] != Token.Empty;
+        return board[coordinate.x, coordinate.y - 1, coordinate.z] != TokenType.Empty;
     }
 
     //retrieves the token value at coordinate if coordinate is in bounds
-    public bool TryGetValue(Vector3Int coordinate, out Token token)
+    public bool TryGetValue(Vector3Int coordinate, out TokenType token)
     {
-        token = Token.Empty;
+        token = TokenType.Empty;
 
         if (!IsInBounds(coordinate))
         {
@@ -121,7 +121,7 @@ public class BoardData
     }
 
     //sets the token value at coordinate if the space specified by coordinate is available
-    public bool TrySetValue(Vector3Int coordinate, Token token)
+    public bool TrySetValue(Vector3Int coordinate, TokenType token)
     {
         if (!IsSpaceAvailable(coordinate))
         {
@@ -591,9 +591,9 @@ public class BoardData
 
 // the pieces of the board
 [System.Serializable]
-public enum Token
+public enum TokenType
 {    
     Empty,
-    Red,
-    Yellow
+    Player,
+    AI
 }
