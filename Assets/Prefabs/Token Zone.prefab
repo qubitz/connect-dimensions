@@ -147,6 +147,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 76008b803511a8e4c91d6f9bacc10161, type: 2}
   m_StaticBatchInfo:
@@ -181,6 +182,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: e4ef08651d8c2f449b75182ddab6e563, type: 2}
   m_StaticBatchInfo:
@@ -259,13 +261,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highlightObjectPrefab: {fileID: 1058455246952636, guid: 7c6f271549949044ab7982733b1848fa,
     type: 2}
-  snapType: 0
+  snapType: 2
   snapDuration: 0.5
   applyScalingOnSnap: 1
   cloneNewOnUnsnap: 0
   highlightColor: {r: 0.38431373, g: 0.9490196, b: 1, a: 0.26666668}
   validHighlightColor: {r: 0, g: 0, b: 0, a: 0}
-  highlightAlwaysActive: 1
+  highlightAlwaysActive: 0
   validObjectListPolicy: {fileID: 114712571889205924}
   displayDropZoneInEditor: 1
   defaultSnappedInteractableObject: {fileID: 0}

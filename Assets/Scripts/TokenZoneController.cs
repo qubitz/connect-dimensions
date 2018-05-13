@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using UnityEngine;
 using VRTK;
 
@@ -6,8 +6,15 @@ public class TokenZoneController : MonoBehaviour
 {
     public static TokenZoneController instance = null;
 
+    [Header("Placement Settings")]
     [SerializeField]
-    [Tooltip("ObjectAutoGrab of which to attach the game board. If left empty the game board will be placed at (0,0,0).")]
+    private Vector3 spawnPoint = Vector3.zero;
+    [SerializeField]
+    private float baseWidth = 0.3f;
+
+    [Space]
+    [SerializeField]
+    [Tooltip("ObjectAutoGrab of which to attach the game board. If left empty the game board will be placed at (0,0,0) and disable the first ObjectAutoGrab it finds.")]
     private VRTK_ObjectAutoGrab autoGrabToAttach = null;
     public GameObject tokenBoardPrefab;
     public GameObject tokenZonePrefab;
@@ -17,31 +24,44 @@ public class TokenZoneController : MonoBehaviour
 
     public GameObject TokenAt(int x, int y, int z)
     {
-        return zoneData[z][x][y];
+        GameObject token = null;
+
+        try
+        {
+            token = zoneData[z][x][y];
+        }
+        catch (IndexOutOfRangeException)
+        {
+            token = null;
+        }
+
+        return token;
     }
 
     public GameObject TokenAt(Vector3Int index)
     {
-        return zoneData[index.z][index.x][index.y];
+        return TokenAt(index.x, index.y, index.z);
     }
 
     public void ConstructNewBoard(Vector3Int size, bool shouldReplace = true)
     {
         if (shouldReplace) Destroy(zoneBoard);
-        zoneBoard = Instantiate(tokenBoardPrefab);
+
+        zoneBoard = Instantiate(tokenBoardPrefab, spawnPoint, new Quaternion());
         var planes = new GameObject("Planes");
         planes.SetParentRelative(zoneBoard);
         zoneData = GridSpawner.ConstructPlanes(size, planes, tokenZonePrefab);
 
-        var collider = tokenBoardPrefab.GetComponent<BoxCollider>();
-        if (collider != null) collider.size = size;
+        FitCollider(size);
+        FitBase(size);
         InitZoneData();
     }
 
     public void OnTokenPlaced(Vector3Int index)
     {
-        Debug.Log("Token placed at:" + index);
-        // Call andys thing
+        Debug.Log("Token placed at: " + index);
+        TokenAt(index + Vector3Int.up)?.SetActive(true);
+        FindObjectOfType<GameController>().PlaceToken(index, Token.Red);
     }
 
     protected void Awake()
@@ -58,7 +78,7 @@ public class TokenZoneController : MonoBehaviour
 
     protected void Start()
     {
-        ConstructNewBoard(new Vector3Int(3, 4, 5));
+        ConstructNewBoard(new Vector3Int(4, 4, 4));  // hardcoded
 
         if (autoGrabToAttach)
         {
@@ -66,7 +86,7 @@ public class TokenZoneController : MonoBehaviour
         }
         else
         {
-            autoGrabToAttach.enabled = false;
+            FindObjectOfType<VRTK_ObjectAutoGrab>().enabled = false;
         }
     }
 
@@ -81,12 +101,26 @@ public class TokenZoneController : MonoBehaviour
                     TokenSnapDropZone tokenZone;
                     if (tokenZone = zoneData[i][j][k].GetComponent<TokenSnapDropZone>())
                     {
-                        tokenZone.index = new Vector3Int(i, j, k);
-                        // Enable zone only if zone is at bottom layer; otherwise false
-                        tokenZone.enabled = (k == 0);
+                        tokenZone.index = new Vector3Int(j, k, i);
+                        // Enable zone if zone is at bottom layer
+                        tokenZone.gameObject.SetActive(k == 0);
                     }
                 }
             }
         }
+    }
+
+    private void FitCollider(Vector3Int size)
+    {
+        var collider = zoneBoard.GetComponent<BoxCollider>();
+        if (collider != null) collider.size = size;
+    }
+
+    private void FitBase(Vector3Int size)
+    {
+        var @base = zoneBoard.transform.Find("Base");
+        float basePos = (size.y / 2.0f) + (baseWidth / 2.0f);
+        @base.localPosition += Vector3.down * basePos;
+        @base.localScale = new Vector3(size.x, baseWidth, size.z);
     }
 }

@@ -10,4 +10,9 @@ public class TokenSnapDropZone : VRTK_SnapDropZone
         TokenZoneController.instance.OnTokenPlaced(index);
         base.OnObjectSnappedToDropZone(e);
     }
+
+    public override void OnObjectUnsnappedFromDropZone(SnapDropZoneEventArgs e)
+    {
+        if (!isSnapped) base.OnObjectUnsnappedFromDropZone(e);
+    }
 }

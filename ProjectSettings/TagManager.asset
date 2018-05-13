@@ -4,10 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Token
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
+  - 
   - Water
   - UI
   - 

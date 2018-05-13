@@ -29,7 +29,7 @@ GameObject:
   - component: {fileID: 23036312709673212}
   m_Layer: 0
   m_Name: Token 1
-  m_TagString: Untagged
+  m_TagString: Token
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -90,6 +90,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: e4ef08651d8c2f449b75182ddab6e563, type: 2}
   m_StaticBatchInfo:

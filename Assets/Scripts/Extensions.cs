@@ -14,7 +14,7 @@ public static class Extensions
 
     public static void SetParentRelative(this GameObject go, GameObject newParent)
     {
-        var newPos = go.transform.localPosition + newParent.transform.localPosition;
+        var newPos = go.transform.localPosition;
         var savedScale = go.transform.localScale;
         go.transform.parent = newParent.transform;
         go.transform.localPosition = newPos;
