@@ -25,18 +25,24 @@ public class GameAIGraphics : MonoBehaviour
 
     private Vector3 currentPosition = Vector3.zero;
 
+    private float angle;
+
     private void Start()
     {
         originalPosition = transform.position;
         thinking = false;
+
+        angle = 0f;
     }
 
     private void Update()
     {
+        angle += thinkingMovementSpeed * Time.deltaTime;
+
         if (thinking)
         {
-            currentPosition.x = thinkingMovementRadius * Mathf.Cos(Time.realtimeSinceStartup);
-            currentPosition.y = thinkingMovementRadius * Mathf.Sin(Time.realtimeSinceStartup);
+            currentPosition.x = thinkingMovementRadius * Mathf.Cos(angle);
+            currentPosition.y = thinkingMovementRadius * Mathf.Sin(angle);
             currentPosition.z = 0;
 
             currentPosition += originalPosition;

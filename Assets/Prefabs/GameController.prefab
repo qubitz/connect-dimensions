@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4667095643529590}
   - component: {fileID: 114714012804225812}
-  - component: {fileID: 114918938933007358}
   - component: {fileID: 114469145011865446}
   m_Layer: 0
   m_Name: GameController
@@ -53,14 +52,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: add387e3c6a8f71489a8bfbc5e7b686f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myToken: 1
+  myToken: 2
   depth: 3
+  TokenPrefabToPlace: {fileID: 1049224701324784, guid: 3c0e783ac9d323a4595b5e5b08cdab31,
+    type: 2}
   onStartPlanning:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
         m_MethodName: StartThinking
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -101,6 +124,28 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114714012804225812
@@ -117,33 +162,11 @@ MonoBehaviour:
   boardSize: {x: 4, y: 4, z: 4}
   winEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114918938933007358}
-        m_MethodName: PrintWinner
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: PlayerEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  yellowPlayerTurn:
+  playerTurn:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114918938933007358}
-        m_MethodName: SetYellow
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 114469145011865446}
         m_MethodName: PredictMoves
         m_Mode: 1
@@ -157,11 +180,11 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  redPlayerTurn:
+  aiTurn:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114469145011865446}
-        m_MethodName: PlaceToken
+        m_MethodName: StartPlaceToken
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -173,16 +196,4 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  currentPlayer: 2
---- !u!114 &114918938933007358
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1235707996875230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3258f925e322c7143a6abbeaf15269b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  position: {x: 0, y: 0, z: 0}
+  currentPlayer: 1
