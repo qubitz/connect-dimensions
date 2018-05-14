@@ -13,11 +13,28 @@ public class OnDemandSpawner : MonoBehaviour
 {
     public GameObject prefab = null;
 
+    private GameObject lastSpawned = null;
+
+    private void Start()
+    {
+        ResetSpawner();
+    }
+
+    public void ResetSpawner()
+    {
+        if (lastSpawned != null)
+        {
+            DestroyImmediate(lastSpawned);
+        }
+
+        Spawn();
+    }
+
     public void Spawn()
     {
         if (prefab)
         {
-            Instantiate(prefab, transform.position, Quaternion.identity);
+            lastSpawned = Instantiate(prefab, transform.position, Quaternion.identity);
         }
     }
 }

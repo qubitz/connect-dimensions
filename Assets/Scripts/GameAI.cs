@@ -37,6 +37,14 @@ public class GameAI : MonoBehaviour
 
     private void Awake()
     {
+        ResetAI();
+    }
+
+    public void ResetAI()
+    {
+        StopAllCoroutines();
+        StopAllThreads();
+
         gameController = GetComponent<GameController>();
 
         MoveJob.abortAll = false;
@@ -59,13 +67,17 @@ public class GameAI : MonoBehaviour
         //abort all threaded jobs
         MoveJob.abortAll = true;
 
-        for (index = 0; index < threads.Count; index++)
+        if (threads != null)
         {
-            threads[index].Join();
-        }
+            for (index = 0; index < threads.Count; index++)
+            {
+                threads[index].Join();
+            }
 
-        //clean up
-        threads.Clear();
+            //clean up
+            threads.Clear();
+        }
+        
         MoveJob.abortAll = false;
     }
 

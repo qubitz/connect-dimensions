@@ -35,6 +35,11 @@ public class GameAIGraphics : MonoBehaviour
         angle = 0f;
     }
 
+    public void ResetAIGraphics()
+    {
+        thinking = false;
+    }
+
     private void Update()
     {
         angle += thinkingMovementSpeed * Time.deltaTime;

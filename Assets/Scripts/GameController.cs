@@ -44,10 +44,15 @@ public class GameController : MonoBehaviour
     
 	void Awake ()
     {
+        ResetGame();
+	}
+
+    public void ResetGame()
+    {
         gameOver = false;
         board = new BoardData(boardSize);
         boardSize = board.Size;
-	}
+    }
 
     public void PlaceToken(Vector3Int coordinate, TokenType token)
     {
