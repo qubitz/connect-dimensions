@@ -56,7 +56,7 @@ public class GameController : MonoBehaviour
 
     public void PlaceToken(Vector3Int coordinate, TokenType token)
     {
-        Debug.Log("Piece placed " + token + " at " + coordinate +" and current player is " + currentPlayer);
+        //Debug.Log("Piece placed " + token + " at " + coordinate +" and current player is " + currentPlayer);
 
 
         if (!gameOver 
@@ -71,7 +71,7 @@ public class GameController : MonoBehaviour
             else
             {
                 //switch player
-                Debug.Log("Changing turn.");
+                //Debug.Log("Changing turn.");
                 ChangeTurn();
             }            
         }        
@@ -107,7 +107,7 @@ public class GameController : MonoBehaviour
     {
         if (callback != null)
         {
-            Debug.Log("Invoking " + playerID + "'s callback.");
+            //Debug.Log("Invoking " + playerID + "'s callback.");
 
             callback.Invoke();
         }

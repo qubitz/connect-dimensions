@@ -11,6 +11,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Text.RegularExpressions;
+using System.Text;
 using UnityEngine;
 using System.Threading;
 using UnityEngine.Events;
@@ -444,69 +445,96 @@ public class GameAI : MonoBehaviour
     {
         int index, value = 0, count;
         string testStr;
-
-        testStr = "";
-
-        //look for non-consecutive potential wins
-        testStr = token.ToString() + " " + token.ToString() + " " + TokenType.Empty.ToString() + " " + token.ToString();
-        count = Regex.Matches(boardState, testStr).Count;
-        value += 10 * count;
-
-
-        testStr = token.ToString() + " " + TokenType.Empty.ToString() + " " + token.ToString() + " " + token.ToString();
-        count = Regex.Matches(boardState, testStr).Count;
-        value += 10 * count;
-
-
-        //look for blocked losses
-        testStr = GameStatus.GetOppositePlayerOf(token) + " " + GameStatus.GetOppositePlayerOf(token) + " " + GameStatus.GetOppositePlayerOf(token) + token.ToString() + " ";
-        count = Regex.Matches(boardState, testStr).Count;
-        value += 50 * count;
-
-        testStr = GameStatus.GetOppositePlayerOf(token) + " " + GameStatus.GetOppositePlayerOf(token) + " " + token.ToString() + " "  + GameStatus.GetOppositePlayerOf(token);
-        count = Regex.Matches(boardState, testStr).Count;
-        value += 50 * count;
-
-
-        testStr = GameStatus.GetOppositePlayerOf(token) + " " + token.ToString() + " " + GameStatus.GetOppositePlayerOf(token) + " " + GameStatus.GetOppositePlayerOf(token);
-        count = Regex.Matches(boardState, testStr).Count;
-        value += 50 * count;
-
-        testStr = token.ToString() + " " + GameStatus.GetOppositePlayerOf(token) + " " + GameStatus.GetOppositePlayerOf(token) + " " + GameStatus.GetOppositePlayerOf(token);
-        count = Regex.Matches(boardState, testStr).Count;
-        value += 50 * count;
+        StringBuilder stringBuilder = new StringBuilder();
         
 
+        //look for blocked losses
+        stringBuilder.Clear();
+        stringBuilder.Append(GameStatus.GetOppositePlayerOf(token).ToString());
+        stringBuilder.Append(" ");
+        stringBuilder.Append(token.ToString());
+        stringBuilder.Append(" ");
+
+        testStr = stringBuilder.ToString();
+        count = Regex.Matches(boardState, testStr).Count;
+        value += 30 * count;
+
+
+        stringBuilder.Clear();
+        stringBuilder.Append(GameStatus.GetOppositePlayerOf(token).ToString());
+        stringBuilder.Append(" ");
+        stringBuilder.Append(GameStatus.GetOppositePlayerOf(token).ToString());
+        stringBuilder.Append(" ");
+        stringBuilder.Append(token.ToString());
+        stringBuilder.Append(" ");
+        stringBuilder.Append(GameStatus.GetOppositePlayerOf(token).ToString());
+        stringBuilder.Append(" ");
+        
+        testStr = stringBuilder.ToString();
+        count = Regex.Matches(boardState, testStr).Count;
+        value += 50 * count;
+
+
+        stringBuilder.Clear();
+        stringBuilder.Append(GameStatus.GetOppositePlayerOf(token).ToString());
+        stringBuilder.Append(" ");
+        stringBuilder.Append(token.ToString());
+        stringBuilder.Append(" ");
+        stringBuilder.Append(GameStatus.GetOppositePlayerOf(token).ToString());
+        stringBuilder.Append(" ");        
+        stringBuilder.Append(GameStatus.GetOppositePlayerOf(token).ToString());
+        stringBuilder.Append(" ");
+
+        testStr = stringBuilder.ToString();
+        count = Regex.Matches(boardState, testStr).Count;
+        value += 50 * count;
+
+
+        stringBuilder.Clear();
+        stringBuilder.Append(token.ToString());
+        stringBuilder.Append(" ");
+        stringBuilder.Append(GameStatus.GetOppositePlayerOf(token).ToString());
+        stringBuilder.Append(" ");
+
+        testStr = stringBuilder.ToString();
+        count = Regex.Matches(boardState, testStr).Count;
+        value += 30 * count;
+
+
         //look for complete wins/losses
-        testStr = "";
+
+        stringBuilder.Clear();
 
         //get weight of number of winning instances
         for (index = 0; index < 4; index++)
         {
-            testStr += token.ToString() + " ";
+            stringBuilder.Append(token.ToString());
+            stringBuilder.Append(" ");
         }
-        
+
+        testStr = stringBuilder.ToString();
+
         //count number of token combo
         count = Regex.Matches(boardState, testStr).Count;
 
         value += 25 * count;
 
 
-
-        testStr = "";
+        stringBuilder.Clear();
 
         //get weight of number of losing instances
         for (index = 0; index < 4; index++)
         {
-            testStr += GameStatus.GetOppositePlayerOf(token) + " ";
+            stringBuilder.Append(GameStatus.GetOppositePlayerOf(token).ToString());
+            stringBuilder.Append(" ");
         }
+
+        testStr = stringBuilder.ToString();
 
         //count number of token combo
         count = Regex.Matches(boardState, testStr).Count;
 
         value -= 70 * count;
-
-
 
 
         return value;
