@@ -435,10 +435,7 @@ public class GameAI : MonoBehaviour
         //evaluate board state
 
         //our value
-        value += 2 * GetTokenValue(boardState, TokenType.AI);
-
-        //opponent value
-        value -= GetTokenValue(boardState, TokenType.Player);
+        value += GetTokenValue(boardState, TokenType.AI);
         
         return value;
     }
@@ -448,36 +445,69 @@ public class GameAI : MonoBehaviour
         int index, value = 0, count;
         string testStr;
 
-        TokenType other;
-
         testStr = "";
 
-        //note: I'm aware that instances of "double counting" of combinations
-        //occurs in this heurisitic
+        //look for non-consecutive potential wins
+        testStr = token.ToString() + " " + token.ToString() + " " + TokenType.Empty.ToString() + " " + token.ToString();
+        count = Regex.Matches(boardState, testStr).Count;
+        value += 10 * count;
 
-        //get weight of number of consecutive instances
+
+        testStr = token.ToString() + " " + TokenType.Empty.ToString() + " " + token.ToString() + " " + token.ToString();
+        count = Regex.Matches(boardState, testStr).Count;
+        value += 10 * count;
+
+
+        //look for blocked losses
+        testStr = GameStatus.GetOppositePlayerOf(token) + " " + GameStatus.GetOppositePlayerOf(token) + " " + GameStatus.GetOppositePlayerOf(token) + token.ToString() + " ";
+        count = Regex.Matches(boardState, testStr).Count;
+        value += 50 * count;
+
+        testStr = GameStatus.GetOppositePlayerOf(token) + " " + GameStatus.GetOppositePlayerOf(token) + " " + token.ToString() + " "  + GameStatus.GetOppositePlayerOf(token);
+        count = Regex.Matches(boardState, testStr).Count;
+        value += 50 * count;
+
+
+        testStr = GameStatus.GetOppositePlayerOf(token) + " " + token.ToString() + " " + GameStatus.GetOppositePlayerOf(token) + " " + GameStatus.GetOppositePlayerOf(token);
+        count = Regex.Matches(boardState, testStr).Count;
+        value += 50 * count;
+
+        testStr = token.ToString() + " " + GameStatus.GetOppositePlayerOf(token) + " " + GameStatus.GetOppositePlayerOf(token) + " " + GameStatus.GetOppositePlayerOf(token);
+        count = Regex.Matches(boardState, testStr).Count;
+        value += 50 * count;
+        
+
+        //look for complete wins/losses
+        testStr = "";
+
+        //get weight of number of winning instances
         for (index = 0; index < 4; index++)
         {
             testStr += token.ToString() + " ";
+        }
+        
+        //count number of token combo
+        count = Regex.Matches(boardState, testStr).Count;
 
-            //count number of token combo
-            count = Regex.Matches(boardState, testStr).Count;
+        value += 25 * count;
 
-            value += (index + 1) * count;
+
+
+        testStr = "";
+
+        //get weight of number of losing instances
+        for (index = 0; index < 4; index++)
+        {
+            testStr += GameStatus.GetOppositePlayerOf(token) + " ";
         }
 
-        //get weight of number of blocks
-        other = (token == TokenType.Player ? TokenType.AI : TokenType.Player);
-
-        testStr = token.ToString() + " " + other.ToString() + " ";
+        //count number of token combo
         count = Regex.Matches(boardState, testStr).Count;
 
-        value += 3 * count; //weight blocks heavier than most consecutive piece setups
+        value -= 70 * count;
 
-        testStr = other.ToString() + " " + token.ToString() + " ";
-        count = Regex.Matches(boardState, testStr).Count;
 
-        value += 3 * count; //weight blocks heavier than most consecutive piece setups
+
 
         return value;
     }
