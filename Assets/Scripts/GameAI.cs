@@ -4,7 +4,7 @@
  * 
  * Copyright (c) 2018 All Rights Reserved
  * 
- * 4/24/2018
+ * 5/14/2018
  * 
  */
 
@@ -18,8 +18,6 @@ using UnityEngine.Events;
 //the game's AI. 
 public class GameAI : MonoBehaviour
 {
-    public TokenType myToken = TokenType.Player;
-
     [Range(1, 5)]
     public int depth = 3;
     [SerializeField]
@@ -130,7 +128,7 @@ public class GameAI : MonoBehaviour
         {
             move = Vector3Int.zero,
             board = board,
-            myToken = myToken,
+            myToken = TokenType.AI,
             depth = depth,
             jobID = 10101
         };
@@ -176,7 +174,7 @@ public class GameAI : MonoBehaviour
             onPlacePiece.Invoke();
         }
 
-        gameController.PlaceToken(move, myToken);
+        gameController.PlaceToken(move, TokenType.AI);
 
         var token = Instantiate(TokenPrefabToPlace);
         TokenZoneController.instance.PlaceToken(token, move);
@@ -229,7 +227,7 @@ public class GameAI : MonoBehaviour
         coreCount = Mathf.Max(System.Environment.ProcessorCount - 1, 1);
 
         //get all possible moves that the other player could make
-        children = GetAllChildrenOf(board, GameStatus.GetOppositePlayerOf(myToken), ref MoveJob.abortAll);
+        children = GetAllChildrenOf(board, TokenType.Player, ref MoveJob.abortAll);
 
         //run MoveJobs for all possible moves asynchronously
         childIndex = 0;
@@ -252,7 +250,7 @@ public class GameAI : MonoBehaviour
             {
                 move = Vector3Int.zero,
                 board = children[childIndex].board,
-                myToken = myToken,
+                myToken = TokenType.AI,
                 depth = depth,
                 jobID = childIndex
             });
@@ -315,7 +313,7 @@ public class GameAI : MonoBehaviour
             //check for depth being reached or if game is over
             if (depth <= 0 || GameStatus.IsGameOver(leaf, ref token))
             {
-                return EvaluateBoard(leaf, current);
+                return EvaluateBoard(leaf);
             }
 
             //generate child leaves
@@ -422,7 +420,7 @@ public class GameAI : MonoBehaviour
         return moves.ToArray();
     }
 
-    private static int EvaluateBoard(BoardData board, TokenType myToken)
+    private static int EvaluateBoard(BoardData board)
     {
         int value = 0;
         string boardState;
@@ -437,10 +435,10 @@ public class GameAI : MonoBehaviour
         //evaluate board state
 
         //our value
-        value += 2 * GetTokenValue(boardState, myToken);
+        value += 2 * GetTokenValue(boardState, TokenType.AI);
 
         //opponent value
-        value -= GetTokenValue(boardState, (myToken == TokenType.Player ? TokenType.AI : TokenType.Player));
+        value -= GetTokenValue(boardState, TokenType.Player);
         
         return value;
     }
