@@ -20,3 +20,7 @@ Made for a class project
 * Professors: Dr. Eelke Folmer and Dr. Paul MacNeilage  
 * University: Univerity of Nevada, Reno  
 * Department: Computer Science and Engineering
+
+Music:
+Dreams by x50 @x50music
+Music provided by Free Music for Vlogs youtu.be/PnbE9VUL6KE
